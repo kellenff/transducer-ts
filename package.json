@@ -1,0 +1,5 @@
+{
+  "name": "transducer-ts",
+  "packageManager": "yarn@4.13.0",
+  "private": true
+}
