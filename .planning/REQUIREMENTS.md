@@ -87,52 +87,52 @@ Deferred to future release. Tracked but not in current roadmap.
 
 ## Traceability
 
-| Requirement | Phase | Status  |
-| ----------- | ----- | ------- |
-| TYPE-01     | TBD   | Pending |
-| TYPE-02     | TBD   | Pending |
-| TYPE-03     | TBD   | Pending |
-| TYPE-04     | TBD   | Pending |
-| TYPE-05     | TBD   | Pending |
-| TYPE-06     | TBD   | Pending |
-| TEST-01     | TBD   | Pending |
-| TEST-02     | TBD   | Pending |
-| TEST-03     | TBD   | Pending |
-| TEST-04     | TBD   | Pending |
-| TEST-05     | TBD   | Pending |
-| TEST-06     | TBD   | Pending |
-| TEST-07     | TBD   | Pending |
-| TEST-08     | TBD   | Pending |
-| TEST-09     | TBD   | Pending |
-| TEST-10     | TBD   | Pending |
-| TEST-11     | TBD   | Pending |
-| TEST-12     | TBD   | Pending |
-| PKG-01      | TBD   | Pending |
-| PKG-02      | TBD   | Pending |
-| PKG-03      | TBD   | Pending |
-| PKG-04      | TBD   | Pending |
-| PKG-05      | TBD   | Pending |
-| PKG-06      | TBD   | Pending |
-| PKG-07      | TBD   | Pending |
-| PKG-08      | TBD   | Pending |
-| PKG-09      | TBD   | Pending |
-| PKG-10      | TBD   | Pending |
-| PKG-11      | TBD   | Pending |
-| DOC-01      | TBD   | Pending |
-| DOC-02      | TBD   | Pending |
-| DOC-03      | TBD   | Pending |
-| DOC-04      | TBD   | Pending |
-| DOC-05      | TBD   | Pending |
-| DOC-06      | TBD   | Pending |
-| DOC-07      | TBD   | Pending |
+| Requirement | Phase   | Status  |
+| ----------- | ------- | ------- |
+| TYPE-01     | Phase 1 | Pending |
+| TYPE-02     | Phase 1 | Pending |
+| TYPE-03     | Phase 2 | Pending |
+| TYPE-04     | Phase 2 | Pending |
+| TYPE-05     | Phase 2 | Pending |
+| TYPE-06     | Phase 2 | Pending |
+| TEST-01     | Phase 3 | Pending |
+| TEST-02     | Phase 4 | Pending |
+| TEST-03     | Phase 4 | Pending |
+| TEST-04     | Phase 5 | Pending |
+| TEST-05     | Phase 5 | Pending |
+| TEST-06     | Phase 6 | Pending |
+| TEST-07     | Phase 6 | Pending |
+| TEST-08     | Phase 6 | Pending |
+| TEST-09     | Phase 7 | Pending |
+| TEST-10     | Phase 7 | Pending |
+| TEST-11     | Phase 7 | Pending |
+| TEST-12     | Phase 3 | Pending |
+| PKG-01      | Phase 8 | Pending |
+| PKG-02      | Phase 8 | Pending |
+| PKG-03      | Phase 8 | Pending |
+| PKG-04      | Phase 8 | Pending |
+| PKG-05      | Phase 8 | Pending |
+| PKG-06      | Phase 8 | Pending |
+| PKG-07      | Phase 8 | Pending |
+| PKG-08      | Phase 8 | Pending |
+| PKG-09      | Phase 8 | Pending |
+| PKG-10      | Phase 8 | Pending |
+| PKG-11      | Phase 8 | Pending |
+| DOC-01      | Phase 9 | Pending |
+| DOC-02      | Phase 9 | Pending |
+| DOC-03      | Phase 9 | Pending |
+| DOC-04      | Phase 9 | Pending |
+| DOC-05      | Phase 9 | Pending |
+| DOC-06      | Phase 9 | Pending |
+| DOC-07      | Phase 9 | Pending |
 
 **Coverage:**
 
-- v1 requirements: 37 total
-- Mapped to phases: 0
-- Unmapped: 37 ⚠️
+- v1 requirements: 36 total
+- Mapped to phases: 36
+- Unmapped: 0
 
 ---
 
 _Requirements defined: 2026-03-22_
-_Last updated: 2026-03-22 after initial definition_
+_Last updated: 2026-03-22 after roadmap creation_
