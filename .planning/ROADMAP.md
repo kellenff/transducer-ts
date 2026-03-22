@@ -30,13 +30,18 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Goal**: All transducer internals are type-sound with zero unsafe casts
 **Depends on**: Nothing (first phase)
 **Requirements**: TYPE-01, TYPE-02
+**Plans:** 1 plan
+
+Plans:
+
+- [ ] 01-01-PLAN.md -- Add StepFn type, update all transducers and barrel export
+
 **Success Criteria** (what must be TRUE):
 
 1. `yarn typecheck` passes with no `as unknown as` casts in take or transduce
 2. `ReducerResult<R>` and `StepFn<R, A>` types exist in src/types/ and are used by take and transduce internally
 3. The public API surface (Transducer, Reducer, into, sequence signatures) is unchanged
 4. `yarn build` produces .d.ts files that do not expose internal StepFn/ReducerResult types
-   **Plans**: TBD
 
 ### Phase 2: Edge Case Behavior
 
@@ -150,7 +155,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
 
 | Phase                               | Plans Complete | Status      | Completed |
 | ----------------------------------- | -------------- | ----------- | --------- |
-| 1. Reduced Type Redesign            | 0/TBD          | Not started | -         |
+| 1. Reduced Type Redesign            | 0/1            | Not started | -         |
 | 2. Edge Case Behavior               | 0/TBD          | Not started | -         |
 | 3. Test Infrastructure              | 0/TBD          | Not started | -         |
 | 4. Stateless Transducer Tests       | 0/TBD          | Not started | -         |
