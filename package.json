@@ -8,7 +8,7 @@
   "author": "transducer-ts contributors",
   "repository": {
     "type": "git",
-    "url": "https://github.com/transducer-ts/transducer-ts"
+    "url": "git+https://github.com/transducer-ts/transducer-ts.git"
   },
   "keywords": [
     "transducer",
@@ -25,44 +25,44 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
     "./types": {
-      "import": "./dist/types.js",
-      "types": "./dist/types.d.ts"
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.js"
     },
     "./map": {
-      "import": "./dist/map.js",
-      "types": "./dist/map.d.ts"
+      "types": "./dist/map.d.ts",
+      "import": "./dist/map.js"
     },
     "./filter": {
-      "import": "./dist/filter.js",
-      "types": "./dist/filter.d.ts"
+      "types": "./dist/filter.d.ts",
+      "import": "./dist/filter.js"
     },
     "./take": {
-      "import": "./dist/take.js",
-      "types": "./dist/take.d.ts"
+      "types": "./dist/take.d.ts",
+      "import": "./dist/take.js"
     },
     "./drop": {
-      "import": "./dist/drop.js",
-      "types": "./dist/drop.d.ts"
+      "types": "./dist/drop.d.ts",
+      "import": "./dist/drop.js"
     },
     "./pipe": {
-      "import": "./dist/pipe.js",
-      "types": "./dist/pipe.d.ts"
+      "types": "./dist/pipe.d.ts",
+      "import": "./dist/pipe.js"
     },
     "./transduce": {
-      "import": "./dist/transduce.js",
-      "types": "./dist/transduce.d.ts"
+      "types": "./dist/transduce.d.ts",
+      "import": "./dist/transduce.js"
     },
     "./into": {
-      "import": "./dist/into.js",
-      "types": "./dist/into.d.ts"
+      "types": "./dist/into.d.ts",
+      "import": "./dist/into.js"
     },
     "./sequence": {
-      "import": "./dist/sequence.js",
-      "types": "./dist/sequence.d.ts"
+      "types": "./dist/sequence.d.ts",
+      "import": "./dist/sequence.js"
     }
   },
   "scripts": {
@@ -75,7 +75,7 @@
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage --passWithNoTests",
-    "prepublishOnly": "yarn check && yarn test && yarn build",
+    "prepublishOnly": "yarn check && yarn test && yarn build && yarn pack -o /tmp/transducer-ts-attw.tgz && npx @arethetypeswrong/cli /tmp/transducer-ts-attw.tgz --ignore-rules cjs-resolves-to-esm no-resolution && npx publint",
     "prepare": "husky"
   },
   "lint-staged": {
