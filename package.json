@@ -28,6 +28,10 @@
       "import": "./dist/drop.js",
       "types": "./dist/drop.d.ts"
     },
+    "./pipe": {
+      "import": "./dist/pipe.js",
+      "types": "./dist/pipe.d.ts"
+    },
     "./transduce": {
       "import": "./dist/transduce.js",
       "types": "./dist/transduce.d.ts"

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { take } from "./index.ts";
+import { pipe } from "../pipe/index.ts";
 import { sequence } from "../sequence/index.ts";
 import { transduce } from "../transduce/index.ts";
 import { into } from "../into/index.ts";
@@ -59,6 +60,14 @@ describe("take", () => {
     const t = take(2);
     expect(sequence(t, [1, 2, 3])).toEqual([1, 2]);
     expect(sequence(t, [4, 5, 6])).toEqual([4, 5]);
+  });
+
+  it("double-take: inner take already Reduced when outer take limit reached", () => {
+    // pipe(take(2), take(2)) — inner take(2) signals Reduced on 2nd element
+    // outer take(2) also hits limit at 2nd element
+    // This exercises the isReduced(result) ? result : reduced(result) branch
+    const xf = pipe(take<number>(2), take<number>(2));
+    expect(sequence(xf, [1, 2, 3, 4])).toEqual([1, 2]);
   });
 
   it("works with into", () => {

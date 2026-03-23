@@ -9,6 +9,7 @@
     { "path": "src/filter" },
     { "path": "src/take" },
     { "path": "src/drop" },
+    { "path": "src/pipe" },
     { "path": "src/transduce" },
     { "path": "src/into" },
     { "path": "src/sequence" }

@@ -4,6 +4,7 @@ export { map } from "./map/index.ts";
 export { filter } from "./filter/index.ts";
 export { take } from "./take/index.ts";
 export { drop } from "./drop/index.ts";
+export { pipe } from "./pipe/index.ts";
 export { transduce } from "./transduce/index.ts";
 export { into } from "./into/index.ts";
 export { sequence } from "./sequence/index.ts";
