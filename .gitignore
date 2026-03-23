@@ -18,6 +18,13 @@ node_modules
 
 # ── GSD baseline (auto-generated) ──
 .gsd
+# TypeScript project references build artifacts
+src/**/*.d.ts
+src/**/*.d.ts.map
+tsconfig.tsbuildinfo
+# Tooling runtime dirs
+.bg-shell/
+.claude/
 .DS_Store
 Thumbs.db
 *.swp
