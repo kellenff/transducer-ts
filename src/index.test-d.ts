@@ -69,3 +69,108 @@ describe("type-level assertions", () => {
     expectTypeOf(sequence(xf, [1, 2, 3])).toEqualTypeOf<number[]>();
   });
 });
+
+describe("pipe high-arity inference", () => {
+  it("pipe 6-arity infers Transducer<number, number>", () => {
+    const xf = pipe(
+      map((x: number) => String(x)),
+      filter((s: string) => s.length > 0),
+      map((s: string) => s.length),
+      filter((x: number) => x > 0),
+      map((x: number) => x > 0),
+      map((x: boolean): number => (x ? 1 : 0)),
+    );
+    expectTypeOf(xf).toEqualTypeOf<Transducer<number, number>>();
+  });
+
+  it("pipe 10-arity infers Transducer<number, number>", () => {
+    const xf = pipe(
+      map((x: number) => String(x)),
+      filter((s: string) => s.length > 0),
+      map((s: string) => s.length),
+      filter((x: number) => x > 0),
+      map((x: number) => x > 0),
+      map((x: boolean) => (x ? 1 : 0)),
+      filter((x: number) => x > 0),
+      map((x: number) => String(x)),
+      drop<string>(1),
+      map((s: string) => s.length),
+    );
+    expectTypeOf(xf).toEqualTypeOf<Transducer<number, number>>();
+  });
+
+  it("pipe 15-arity infers Transducer<number, number>", () => {
+    const xf = pipe(
+      map((x: number) => String(x)),
+      filter((s: string) => s.length > 0),
+      map((s: string) => s.length),
+      filter((x: number) => x > 0),
+      map((x: number) => x > 0),
+      map((x: boolean) => (x ? 1 : 0)),
+      filter((x: number) => x > 0),
+      map((x: number) => String(x)),
+      drop<string>(1),
+      map((s: string) => s.length),
+      take<number>(10),
+      map((x: number) => x > 0),
+      map((x: boolean) => (x ? "yes" : "no")),
+      filter((s: string) => s.length > 0),
+      map((s: string) => s.length),
+    );
+    expectTypeOf(xf).toEqualTypeOf<Transducer<number, number>>();
+  });
+});
+
+describe("pipe mismatch detection", () => {
+  it("pipe rejects mismatch at position 1", () => {
+    pipe(
+      map((x: number) => String(x)),
+      // @ts-expect-error — string output doesn't match boolean input
+      filter((x: boolean) => x),
+    );
+  });
+
+  it("pipe rejects mismatch at position 3", () => {
+    pipe(
+      map((x: number) => String(x)),
+      filter((s: string) => s.length > 0),
+      map((s: string) => s.length),
+      // @ts-expect-error — number output doesn't match string input at position 3
+      filter((s: string) => s.length > 0),
+    );
+  });
+
+  it("pipe rejects mismatch at position 9 in a 10-element chain", () => {
+    pipe(
+      map((x: number) => String(x)),
+      filter((s: string) => s.length > 0),
+      map((s: string) => s.length),
+      filter((x: number) => x > 0),
+      map((x: number) => x > 0),
+      map((x: boolean): number => (x ? 1 : 0)),
+      filter((x: number) => x > 0),
+      map((x: number) => String(x)),
+      drop<string>(1),
+      // @ts-expect-error — string output doesn't match boolean input at position 9
+      filter((x: boolean) => x),
+    );
+  });
+
+  it("pipe rejects single mismatch in 12-element chain", () => {
+    pipe(
+      map((x: number) => String(x)),
+      filter((s: string) => s.length > 0),
+      map((s: string) => s.length),
+      filter((x: number) => x > 0),
+      map((x: number) => x > 0),
+      // @ts-expect-error — boolean output doesn't match string input at position 5
+      filter((s: string) => s.length > 0),
+      map((s: string) => s.length),
+      filter((x: number) => x > 0),
+      map((x: number) => String(x)),
+      drop<string>(1),
+      filter((s: string) => s.length > 0),
+      map((s: string) => s.length),
+    );
+  });
+});

@@ -21,7 +21,9 @@
   "engines": {
     "node": ">=18"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
   "exports": {
     ".": {
@@ -79,7 +81,10 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.ts": ["oxfmt --write", "oxlint"]
+    "*.ts": [
+      "oxfmt --write",
+      "oxlint"
+    ]
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.0",
