@@ -1,8 +1,28 @@
 {
   "name": "transducer-ts",
+  "version": "0.1.0",
+  "description": "Type-safe Clojure-style transducers for TypeScript. Composable algorithmic transformations with full type inference.",
   "type": "module",
   "packageManager": "yarn@4.13.0",
-  "private": true,
+  "license": "Unlicense",
+  "author": "transducer-ts contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/transducer-ts/transducer-ts"
+  },
+  "keywords": [
+    "transducer",
+    "transducers",
+    "functional",
+    "composition",
+    "typescript",
+    "clojure"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "files": ["dist"],
+  "sideEffects": false,
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -55,13 +75,11 @@
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage --passWithNoTests",
+    "prepublishOnly": "yarn check && yarn test && yarn build",
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.ts": [
-      "oxfmt --write",
-      "oxlint"
-    ]
+    "*.ts": ["oxfmt --write", "oxlint"]
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.0",
@@ -76,5 +94,10 @@
   },
   "peerDependencies": {
     "rambda": "^11.1.0"
+  },
+  "peerDependenciesMeta": {
+    "rambda": {
+      "optional": true
+    }
   }
 }

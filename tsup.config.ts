@@ -8,6 +8,7 @@ export default defineConfig({
     filter: "src/filter/index.ts",
     take: "src/take/index.ts",
     drop: "src/drop/index.ts",
+    pipe: "src/pipe/index.ts",
     transduce: "src/transduce/index.ts",
     into: "src/into/index.ts",
     sequence: "src/sequence/index.ts",
