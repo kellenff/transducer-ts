@@ -6,5 +6,13 @@
     "outDir": "../../dist/sequence"
   },
   "include": ["./**/*.ts"],
-  "references": [{ "path": "../types" }, { "path": "../into" }]
+  "references": [
+    {
+      "path": "../types"
+    },
+    {
+      "path": "../into"
+    }
+  ],
+  "exclude": ["./**/*.test.ts", "./**/*.test-d.ts"]
 }

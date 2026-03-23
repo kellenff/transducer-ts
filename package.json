@@ -43,7 +43,7 @@
   },
   "scripts": {
     "build": "tsup",
-    "typecheck": "tsc --build",
+    "typecheck": "tsc --build && tsc --project tsconfig.test.json --noEmit",
     "lint": "oxlint",
     "fmt": "oxfmt --write src",
     "fmt:check": "oxfmt --check src",

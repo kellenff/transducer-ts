@@ -6,5 +6,13 @@
     "outDir": "../../dist/into"
   },
   "include": ["./**/*.ts"],
-  "references": [{ "path": "../types" }, { "path": "../transduce" }]
+  "references": [
+    {
+      "path": "../types"
+    },
+    {
+      "path": "../transduce"
+    }
+  ],
+  "exclude": ["./**/*.test.ts", "./**/*.test-d.ts"]
 }
