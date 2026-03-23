@@ -1,5 +1,71 @@
 {
   "name": "transducer-ts",
+  "type": "module",
   "packageManager": "yarn@4.13.0",
-  "private": true
+  "private": true,
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./types": {
+      "import": "./dist/types.js",
+      "types": "./dist/types.d.ts"
+    },
+    "./map": {
+      "import": "./dist/map.js",
+      "types": "./dist/map.d.ts"
+    },
+    "./filter": {
+      "import": "./dist/filter.js",
+      "types": "./dist/filter.d.ts"
+    },
+    "./take": {
+      "import": "./dist/take.js",
+      "types": "./dist/take.d.ts"
+    },
+    "./drop": {
+      "import": "./dist/drop.js",
+      "types": "./dist/drop.d.ts"
+    },
+    "./transduce": {
+      "import": "./dist/transduce.js",
+      "types": "./dist/transduce.d.ts"
+    },
+    "./into": {
+      "import": "./dist/into.js",
+      "types": "./dist/into.d.ts"
+    },
+    "./sequence": {
+      "import": "./dist/sequence.js",
+      "types": "./dist/sequence.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --build",
+    "lint": "oxlint",
+    "fmt": "oxfmt --write src",
+    "fmt:check": "oxfmt --check src",
+    "check": "yarn typecheck && yarn lint && yarn fmt:check",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "oxfmt --write",
+      "oxlint"
+    ]
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "oxfmt": "^0.41.0",
+    "oxlint": "^1.56.0",
+    "rambda": "^11.1.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  },
+  "peerDependencies": {
+    "rambda": "^11.1.0"
+  }
 }

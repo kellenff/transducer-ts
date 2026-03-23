@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "references": [
+    { "path": "src/types" },
+    { "path": "src/map" },
+    { "path": "src/filter" },
+    { "path": "src/take" },
+    { "path": "src/drop" },
+    { "path": "src/transduce" },
+    { "path": "src/into" },
+    { "path": "src/sequence" }
+  ]
+}

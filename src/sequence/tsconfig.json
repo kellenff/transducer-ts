@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": ".",
+    "outDir": "../../dist/sequence"
+  },
+  "include": ["./**/*.ts"],
+  "references": [{ "path": "../types" }, { "path": "../into" }]
+}
