@@ -9,8 +9,8 @@ Requirements for 0.1.0 release. Each maps to roadmap phases.
 
 ### Type Safety
 
-- [ ] **TYPE-01**: Eliminate `as unknown as R` casts in take transducer by redesigning Reduced type handling
-- [ ] **TYPE-02**: Eliminate `as unknown as R` cast in transduce function (same Reduced redesign)
+- [x] **TYPE-01**: Eliminate `as unknown as R` casts in take transducer by redesigning Reduced type handling
+- [x] **TYPE-02**: Eliminate `as unknown as R` cast in transduce function (same Reduced redesign)
 - [ ] **TYPE-03**: `take(n)` where n < 0 treats n as 0 (matches Clojure behavior)
 - [ ] **TYPE-04**: `drop(n)` where n < 0 passes all elements (matches Clojure behavior)
 - [ ] **TYPE-05**: `take(0)` returns empty result
@@ -89,8 +89,8 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase   | Status  |
 | ----------- | ------- | ------- |
-| TYPE-01     | Phase 1 | Pending |
-| TYPE-02     | Phase 1 | Pending |
+| TYPE-01     | Phase 1 | Complete |
+| TYPE-02     | Phase 1 | Complete |
 | TYPE-03     | Phase 2 | Pending |
 | TYPE-04     | Phase 2 | Pending |
 | TYPE-05     | Phase 2 | Pending |

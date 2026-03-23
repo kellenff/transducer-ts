@@ -34,7 +34,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 
-- [ ] 01-01-PLAN.md -- Add StepFn type, update all transducers and barrel export
+- [x] 01-01-PLAN.md -- Add StepFn type, update all transducers and barrel export
 
 **Success Criteria** (what must be TRUE):
 
