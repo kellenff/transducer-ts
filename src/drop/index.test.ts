@@ -1,0 +1,52 @@
+import { describe, expect, it } from "vitest";
+import { drop } from "./index.ts";
+import { sequence } from "../sequence/index.ts";
+import { into } from "../into/index.ts";
+
+describe("drop", () => {
+  it("drops the first n elements", () => {
+    expect(sequence(drop(2), [1, 2, 3, 4, 5])).toEqual([3, 4, 5]);
+  });
+
+  it("returns empty when n >= collection length", () => {
+    expect(sequence(drop(10), [1, 2, 3])).toEqual([]);
+  });
+
+  it("drop(0) passes all elements through", () => {
+    expect(sequence(drop(0), [1, 2, 3])).toEqual([1, 2, 3]);
+  });
+
+  it("drop(0) on empty collection returns empty", () => {
+    expect(sequence(drop(0), [])).toEqual([]);
+  });
+
+  it("drop(1) drops only first element", () => {
+    expect(sequence(drop(1), [10, 20, 30])).toEqual([20, 30]);
+  });
+
+  it("drop(-1) treats negative n as 0 — passes all through (Clojure semantics)", () => {
+    expect(sequence(drop(-1), [1, 2, 3])).toEqual([1, 2, 3]);
+  });
+
+  it("drop(-5) treats negative n as 0 — passes all through", () => {
+    expect(sequence(drop(-5), [1, 2, 3])).toEqual([1, 2, 3]);
+  });
+
+  it("handles empty collection", () => {
+    expect(sequence(drop(3), [])).toEqual([]);
+  });
+
+  it("drops exactly n elements", () => {
+    expect(sequence(drop(3), [1, 2, 3, 4, 5])).toEqual([4, 5]);
+  });
+
+  it("reuse: applying same transducer value twice creates fresh state", () => {
+    const d = drop(2);
+    expect(sequence(d, [1, 2, 3])).toEqual([3]);
+    expect(sequence(d, [4, 5, 6])).toEqual([6]);
+  });
+
+  it("works with into", () => {
+    expect(into([], drop(2), [10, 20, 30, 40])).toEqual([30, 40]);
+  });
+});
