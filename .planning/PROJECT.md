@@ -19,11 +19,11 @@ Type-safe transducer composition that feels natural in TypeScript and works corr
 - ✓ Strict TypeScript configuration — existing
 - ✓ Linting (oxlint) and formatting (oxfmt) toolchain — existing
 - ✓ Git hooks (husky + lint-staged) — existing
+- ✓ Type-safe transducer internals with zero unsafe casts — Phase 1
 
 ### Active
 
 - [ ] Comprehensive test suite covering all transducers and execution functions
-- [ ] Fix unsafe type casts (`as unknown as R`) in take transducer
 - [ ] Edge case handling: negative n in take/drop matches Clojure behavior (treat as 0 for take, pass all for drop)
 - [ ] Rewritten README with proper API docs and examples
 - [ ] Package ready to publish as 0.1.0 (version, license, package.json metadata)
@@ -80,4 +80,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-03-22 after initialization_
+_Last updated: 2026-03-23 after Phase 1 completion_
