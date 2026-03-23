@@ -48,6 +48,9 @@
     "fmt": "oxfmt --write src",
     "fmt:check": "oxfmt --check src",
     "check": "yarn typecheck && yarn lint && yarn fmt:check",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage --passWithNoTests",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -57,13 +60,15 @@
     ]
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "oxfmt": "^0.41.0",
     "oxlint": "^1.56.0",
     "rambda": "^11.1.0",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
   },
   "peerDependencies": {
     "rambda": "^11.1.0"
