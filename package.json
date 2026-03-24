@@ -68,8 +68,9 @@
     }
   },
   "scripts": {
-    "build": "tsup && node scripts/build-dts-maps.mjs",
+    "build": "tsup",
     "typecheck": "tsc --build && tsc --project tsconfig.test.json --noEmit",
+    "emitTypes": "tsc --build",
     "lint": "oxlint",
     "fmt": "oxfmt --write src",
     "fmt:check": "oxfmt --check src",

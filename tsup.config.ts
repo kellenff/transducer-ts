@@ -17,4 +17,5 @@ export default defineConfig({
   dts: true,
   clean: true,
   sourcemap: true,
+  onSuccess: "yarn emitTypes",
 });
