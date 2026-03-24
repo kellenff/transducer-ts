@@ -95,6 +95,18 @@ This matters in test code where `toEqualTypeOf<Transducer<A, number>>()` fails b
 
 ---
 
+## TypeScript: BuildConstraint capacity scales with PrevIdx tuple length
+
+**Context:** M002/S02 — verifying that 15-arity pipe chains work.
+
+`PrevIdx` is a fixed-length lookup tuple. The current implementation covers indices 0–20 (21 entries), meaning `BuildConstraint` enforces type constraints for chains of up to 21 transducers. For longer chains, TypeScript falls back to unconstrained behavior rather than erroring — it silently stops checking after position 20.
+
+To extend capacity, simply add more entries to `PrevIdx` in `src/pipe/index.ts`. Each entry costs zero runtime overhead.
+
+The 15-arity test (max index 14) is well within bounds. If a future test needs 25-arity, extend `PrevIdx` to 25 entries first.
+
+---
+
 ## Vitest: `@ts-expect-error` only suppresses the immediately following line
 
 **Context:** M002/S02 — mismatch detection tests for pipe.
