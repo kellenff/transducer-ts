@@ -15,72 +15,6 @@ This file is the explicit capability and coverage contract for the project.
 - Validation: unmapped
 - Notes: Deferred past M003. M003 focuses on integration examples, not new API surface.
 
-### R011 — Examples directory with per-library test files, all passing vitest
-- Class: primary-user-loop
-- Status: active
-- Description: An `examples/` directory containing one `.test.ts` file per library (lodash, ramda, rambda, remeda, fp-ts, itertools, underscore), each runnable by vitest with real `expect(...)` assertions
-- Why it matters: Users evaluating the library need concrete, runnable proof of how it integrates with their existing stack
-- Source: user
-- Primary owning slice: M003/S01
-- Supporting slices: M003/S02
-- Validation: mapped
-- Notes: The test files are the documentation — no separate markdown needed
-
-### R012 — Runtime assertions in every example file
-- Class: quality-attribute
-- Status: active
-- Description: Every example file must contain `expect(...)` assertions that actually run and pass — no commented-out snippets, no console.log stubs
-- Why it matters: Without running assertions the examples can silently drift from reality
-- Source: inferred
-- Primary owning slice: M003/S01
-- Supporting slices: M003/S02
-- Validation: mapped
-- Notes: Verified by `yarn test` passing
-
-### R013 — Strict TypeScript — no errors in examples
-- Class: quality-attribute
-- Status: active
-- Description: All example files must typecheck clean under the project's strict tsconfig (strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, verbatimModuleSyntax)
-- Why it matters: Type errors in examples undermine confidence in the library's type safety story
-- Source: inferred
-- Primary owning slice: M003/S01
-- Supporting slices: M003/S02
-- Validation: mapped
-- Notes: Verified by `yarn typecheck` passing
-
-### R014 — Ramda/rambda protocol incompatibility documented inline
-- Class: differentiator
-- Status: active
-- Description: The `examples/ramda.test.ts` and `examples/rambda.test.ts` files must include inline comments explaining that ramda/rambda use the `@@transducer/` object protocol (incompatible with transducer-ts's function-based StepFn) and show the correct usage pattern (ramda functions as callbacks, not transducers)
-- Why it matters: The most likely user mistake is trying to compose R.map as a transducer — a clear inline explanation prevents that confusion
-- Source: inferred
-- Primary owning slice: M003/S01
-- Supporting slices: none
-- Validation: mapped
-- Notes: none
-
-### R015 — vitest and tsconfig wired to cover examples/
-- Class: launchability
-- Status: active
-- Description: `vitest.config.ts` include pattern and `tsconfig.test.json` must cover `examples/**/*.test.ts` so examples run with `yarn test` and typecheck with `yarn typecheck`
-- Why it matters: Examples that aren't wired in are invisible — they won't run in CI and won't catch regressions
-- Source: inferred
-- Primary owning slice: M003/S01
-- Supporting slices: none
-- Validation: mapped
-- Notes: Coverage thresholds must remain on `src/**` only — examples are not production code
-
-### R016 — All seven libraries covered
-- Class: core-capability
-- Status: active
-- Description: lodash, ramda, rambda, remeda, fp-ts, itertools, and underscore each have a dedicated example file
-- Why it matters: The milestone's user-visible promise is breadth — one file per library, not a combined omnibus
-- Source: user
-- Primary owning slice: M003/S01
-- Supporting slices: M003/S02
-- Validation: mapped
-- Notes: lodash/ramda/rambda/remeda in S01; fp-ts/itertools/underscore in S02
-
 ## Validated
 
 ### R001 — `pipe` must correctly infer `Transducer<FirstInput, LastOutput>` for chains of 1, 2, 3, 5, 10, and 15+ transducers
@@ -182,6 +116,72 @@ This file is the explicit capability and coverage contract for the project.
 - Validation: M002 — yarn test:coverage reports 100% stmt/branch/func/line across all 9 source files
 - Notes: The runtime implementation doesn't change, so this should hold trivially
 
+### R011 — Examples directory with per-library test files, all passing vitest
+- Class: primary-user-loop
+- Status: validated
+- Description: An `examples/` directory containing one `.test.ts` file per library (lodash, ramda, rambda, remeda, fp-ts, itertools, underscore), each runnable by vitest with real `expect(...)` assertions
+- Why it matters: Users evaluating the library need concrete, runnable proof of how it integrates with their existing stack
+- Source: user
+- Primary owning slice: M003/S01
+- Supporting slices: M003/S02
+- Validation: M003 — 7 example files present; yarn test 162/162 pass including all 91 example assertions
+- Notes: The test files are the documentation — no separate markdown needed
+
+### R012 — Runtime assertions in every example file
+- Class: quality-attribute
+- Status: validated
+- Description: Every example file must contain `expect(...)` assertions that actually run and pass — no commented-out snippets, no console.log stubs
+- Why it matters: Without running assertions the examples can silently drift from reality
+- Source: inferred
+- Primary owning slice: M003/S01
+- Supporting slices: M003/S02
+- Validation: M003 — yarn test 162/162 pass; all 7 example files contain substantive expect() assertions
+- Notes: Verified by `yarn test` passing
+
+### R013 — Strict TypeScript — no errors in examples
+- Class: quality-attribute
+- Status: validated
+- Description: All example files must typecheck clean under the project's strict tsconfig (strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, verbatimModuleSyntax)
+- Why it matters: Type errors in examples undermine confidence in the library's type safety story
+- Source: inferred
+- Primary owning slice: M003/S01
+- Supporting slices: M003/S02
+- Validation: M003 — yarn typecheck exits 0 with tsconfig.test.json covering examples/**/*.ts; no errors under strict+exactOptionalPropertyTypes
+- Notes: Verified by `yarn typecheck` passing
+
+### R014 — Ramda/rambda protocol incompatibility documented inline
+- Class: differentiator
+- Status: validated
+- Description: The `examples/ramda.test.ts` and `examples/rambda.test.ts` files must include inline comments explaining that ramda/rambda use the `@@transducer/` object protocol (incompatible with transducer-ts's function-based StepFn) and show the correct usage pattern (ramda functions as callbacks, not transducers)
+- Why it matters: The most likely user mistake is trying to compose R.map as a transducer — a clear inline explanation prevents that confusion
+- Source: inferred
+- Primary owning slice: M003/S01
+- Supporting slices: none
+- Validation: M003 — both ramda.test.ts and rambda.test.ts open with 18-line @@transducer/ protocol incompatibility comment blocks with correct/incorrect usage examples
+- Notes: none
+
+### R015 — vitest and tsconfig wired to cover examples/
+- Class: launchability
+- Status: validated
+- Description: `vitest.config.ts` include pattern and `tsconfig.test.json` must cover `examples/**/*.test.ts` so examples run with `yarn test` and typecheck with `yarn typecheck`
+- Why it matters: Examples that aren't wired in are invisible — they won't run in CI and won't catch regressions
+- Source: inferred
+- Primary owning slice: M003/S01
+- Supporting slices: none
+- Validation: M003 — vitest.config.ts include: ["src/**/*.test.ts", "examples/**/*.test.ts"]; tsconfig.test.json include: ["src/**/*.ts", "examples/**/*.ts"]; coverage.include still src/**/*.ts only; yarn test runs 7 example files
+- Notes: Coverage thresholds remain on `src/**` only — examples are not production code
+
+### R016 — All seven libraries covered
+- Class: core-capability
+- Status: validated
+- Description: lodash, ramda, rambda, remeda, fp-ts, itertools, and underscore each have a dedicated example file
+- Why it matters: The milestone's user-visible promise is breadth — one file per library, not a combined omnibus
+- Source: user
+- Primary owning slice: M003/S01
+- Supporting slices: M003/S02
+- Validation: M003 — all 7 files present: lodash (17 tests), ramda (14), rambda (10), remeda (13), fp-ts (11), itertools (12), underscore (14); yarn test 162/162 pass
+- Notes: lodash/ramda/rambda/remeda in S01; fp-ts/itertools/underscore in S02
+
 ## Traceability
 
 | ID | Class | Status | Primary owner | Supporting | Proof |
@@ -196,17 +196,16 @@ This file is the explicit capability and coverage contract for the project.
 | R008 | quality-attribute | validated | M002/S02 | none | M002 — yarn check exits 0: typecheck clean, oxlint 0 warnings 0 errors, oxfmt all files correct |
 | R009 | quality-attribute | validated | M002/S02 | none | M002 — yarn test:coverage reports 100% stmt/branch/func/line across all 9 source files |
 | R010 | core-capability | deferred | none | none | unmapped |
-| R011 | primary-user-loop | active | M003/S01 | M003/S02 | mapped |
-| R012 | quality-attribute | active | M003/S01 | M003/S02 | mapped |
-| R013 | quality-attribute | active | M003/S01 | M003/S02 | mapped |
-| R014 | differentiator | active | M003/S01 | none | mapped |
-| R015 | launchability | active | M003/S01 | none | mapped |
-| R016 | core-capability | active | M003/S01 | M003/S02 | mapped |
+| R011 | primary-user-loop | validated | M003/S01 | M003/S02 | M003 — 7 example files; yarn test 162/162 pass including all 91 example assertions |
+| R012 | quality-attribute | validated | M003/S01 | M003/S02 | M003 — yarn test 162/162 pass; all 7 example files contain substantive expect() assertions |
+| R013 | quality-attribute | validated | M003/S01 | M003/S02 | M003 — yarn typecheck exits 0 with examples/ covered under strict+exactOptionalPropertyTypes |
+| R014 | differentiator | validated | M003/S01 | none | M003 — ramda.test.ts and rambda.test.ts each have 18-line @@transducer/ protocol incompatibility comment blocks |
+| R015 | launchability | validated | M003/S01 | none | M003 — vitest.config.ts and tsconfig.test.json both extended; yarn test runs 7 example files; coverage scope unchanged |
+| R016 | core-capability | validated | M003/S01 | M003/S02 | M003 — all 7 files present with dedicated tests; yarn test 162/162 pass |
 
 ## Coverage Summary
 
-- Active requirements: 6 (R011–R016)
-- Mapped to slices: 6
-- Validated: 9 (R001–R009)
+- Active requirements: 0
+- Validated: 15 (R001–R009, R011–R016)
 - Deferred: 1 (R010)
 - Unmapped active requirements: 0

@@ -128,3 +128,70 @@ pipe(
   filter((x: boolean) => x),
 );
 ```
+
+---
+
+## transducer-ts: `filter()` preserves input element type — cannot narrow unions within `pipe()`
+
+**Context:** M003/S01 — lodash/remeda/ramda example files.
+
+`filter(pred)` in transducer-ts preserves the input element type `A` — it does not narrow to a subtype even when `pred` is a type guard. This means you cannot write:
+
+```typescript
+// ❌ type is still string[] | number[], not string[]
+const xform = pipe(filter((x: string | number): x is string => typeof x === "string"));
+```
+
+**Workaround:** Use a two-step `sequence()` call and cast at the call site if narrowing is needed. The example files avoid mixed-union inputs rather than documenting a complex workaround. This is a known TypeScript limitation with higher-order function type inference.
+
+---
+
+## fp-ts: Subtype casts fail under `exactOptionalPropertyTypes` — use `getOrElse()`
+
+**Context:** M003/S02 — fp-ts example file.
+
+Under `exactOptionalPropertyTypes: true`, attempting to narrow `Option<A>` to `Some<A>` via `as Some<A>` fails because `Some.value` is required but the general `Option` type has `value` as an optional property. The pattern `(opt as O.Some<A>).value` causes a type error.
+
+**Correct pattern:**
+```typescript
+// ✅ safe extraction — works under exactOptionalPropertyTypes
+O.getOrElse(() => defaultValue)(option)
+```
+
+This applies to any fp-ts type where `fold`/`match` or `getOrElse` is the idiomatic accessor.
+
+---
+
+## itertools: lowercase `takewhile` (not `takeWhile`)
+
+**Context:** M003/S02 — itertools example file.
+
+The itertools npm package exports `takewhile` in all lowercase, not `takeWhile`. This differs from the camelCase convention used by most JS utility libraries. Always check actual exports when using itertools — `izip`, `chunked`, `chain`, `takewhile`, `islice` are all lowercase or abbreviated.
+
+---
+
+## Ramda/Rambda: `@@transducer/` protocol is incompatible with transducer-ts
+
+**Context:** M003/S01 — ramda and rambda example files.
+
+Ramda and Rambda implement their own transducer protocol using transformer objects (`{ '@@transducer/step': fn, '@@transducer/init': fn, '@@transducer/result': fn }`). This is **not compatible** with transducer-ts, which uses plain `StepFn<R, A>` functions.
+
+**The correct integration pattern** is to use fully-applied ramda/rambda functions as **callbacks** inside transducer-ts transducers, never as transducers directly:
+
+```typescript
+// ✅ R.add(1) is a fully-applied (x: number) => number
+sequence(map(R.add(1)), [1, 2, 3])
+
+// ❌ R.map(f) returns a transformer object, not a StepFn
+sequence(R.map(R.add(1)), [1, 2, 3])  // wrong shape at runtime
+```
+
+Any ramda/rambda function that has been fully applied (not waiting for more arguments) is a plain function and works as a map/filter callback.
+
+---
+
+## Rambda 11.x API diverges significantly from Ramda
+
+**Context:** M003/S01 — rambda example file.
+
+Rambda 11.x has moved away from being a ramda subset and now focuses on collection/object utilities. It **does not include** `R.add`, `R.multiply`, `R.negate`, `R.inc`, `R.dec`, or other arithmetic helpers that ramda exports. Test against actual Rambda exports rather than assuming parity with ramda.
