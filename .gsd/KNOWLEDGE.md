@@ -46,15 +46,15 @@ This is idiomatic TypeScript 4.2+ and simpler than `Extract<keyof T, \`${number}
 
 ---
 
-## tsup DTS: Module-private types stay unexported
+## tsc DTS: Module-private types stay unexported
 
-**Context:** M002/S01 — T02 verified that tsup preserves module-private type aliases.
+**Context:** M002/S01 — verified that tsc preserves module-private type aliases.
 
-tsup faithfully maps source `export` presence to DTS export presence:
+tsc (and tsup, previously used) faithfully maps source `export` presence to DTS export presence:
 - `type Foo = …` (no `export`) → emitted as `type Foo = …` in `.d.ts`, NOT in the `export { … }` block.
 - `export type Foo = …` → emitted in both the body and the export block.
 
-**There is no tsup configuration needed** to keep helper types unexported. Just don't write `export` on them in the source. This pattern is reliable and can be used in any tsup-built module to expose internal type aliases for human inspection (via `.d.ts` readability) without making them part of the public API.
+**No compiler configuration is needed** to keep helper types unexported. Just don't write `export` on them in the source. This pattern is reliable and can be used in any tsc-built module to expose internal type aliases for human inspection (via `.d.ts` readability) without making them part of the public API.
 
 ---
 

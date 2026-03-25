@@ -4,18 +4,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-TypeScript port of [Clojure's transducers](https://clojure.org/reference/transducers) — composable, type-safe algorithmic transformations. Designed to work with [rambda's](https://selfrefactor.github.io/rambda/#/) `pipe` out of the box.
+TypeScript port of [Clojure's transducers](https://clojure.org/reference/transducers) — composable, type-safe algorithmic transformations. Ships its own `pipe` for transducer composition. No runtime dependencies.
 
 ## Commands
 
 ```bash
 yarn install       # install dependencies
-yarn build         # bundle with tsup (ESM + .d.ts)
+yarn build         # compile with tsc --build (ESM + .d.ts via project references)
 yarn typecheck     # tsc --build (project references)
 yarn lint          # oxlint
 yarn fmt           # oxfmt --write src
 yarn fmt:check     # oxfmt --check src
 yarn check         # typecheck + lint + fmt:check
+yarn test          # vitest run
+yarn test:coverage # vitest run --coverage
 ```
 
 ## Architecture
@@ -23,7 +25,7 @@ yarn check         # typecheck + lint + fmt:check
 One module per exported function, each in its own directory under `src/` with a dedicated `tsconfig.json` (project references). The dependency graph:
 
 ```
-types ← map, filter, take, drop
+types ← map, filter, take, drop, pipe
 types ← transduce
 types, transduce ← into
 types, into ← sequence
@@ -34,25 +36,26 @@ types, into ← sequence
 ## Tooling
 
 - **Package manager:** Yarn 4 (Berry) with PnP — no `node_modules`
-- **Bundler:** tsup (ESM only, dts generation, sourcemaps)
-- **TypeScript:** strict mode + `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `verbatimModuleSyntax`. Uses `.ts` import extensions with `allowImportingTsExtensions` + `emitDeclarationOnly`
+- **Build:** `tsc --build` with TypeScript project references — emits ESM `.js` + `.d.ts` + `.d.ts.map` directly to `dist/`
+- **TypeScript:** strict mode + `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `verbatimModuleSyntax`, `declarationMap: true`
 - **Linter:** oxlint — correctness=error, suspicious=warn, pedantic=warn
 - **Formatter:** oxfmt
+- **Test runner:** vitest (runtime tests + type-level tests via `--typecheck`)
 - **Git hooks:** husky + lint-staged runs oxfmt and oxlint on staged `.ts` files
 
 ## Conventions
 
 - ESM (`"type": "module"`)
 - 2-space indent, LF line endings, UTF-8 (`.editorconfig`)
-- `rambda` is a peer dependency — consumers provide it
-- Imports use `.ts` extensions (`from "../types/index.ts"`)
+- No runtime dependencies — `pipe` is built-in, no peer deps required
+- Imports use `.js` extensions in source (`from "../types/index.js"`) — tsc resolves `.ts` sources via `allowImportingTsExtensions`
 
 <!-- GSD:project-start source:PROJECT.md -->
 ## Project
 
 **transducer-ts**
 
-A TypeScript port of Clojure's transducers — composable, type-safe algorithmic transformations. Designed to work with rambda's `pipe` out of the box. Ships as ESM with full type declarations.
+A TypeScript port of Clojure's transducers — composable, type-safe algorithmic transformations. Ships its own `pipe` for transducer composition. No runtime dependencies. Ships as ESM with full type declarations.
 
 **Core Value:** Type-safe transducer composition that feels natural in TypeScript and works correctly out of the box.
 
@@ -60,7 +63,7 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 
 - **TypeScript strict mode**: All code must pass with `strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `verbatimModuleSyntax`
 - **ESM only**: No CJS build, `"type": "module"` in package.json
-- **No runtime dependencies**: Only `rambda` as peer dep
+- **No runtime dependencies**: Zero peer deps required — `pipe` is built-in
 - **Clojure semantics**: When behavior is ambiguous, match Clojure's transducer behavior
 <!-- GSD:project-end -->
 
@@ -71,55 +74,57 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 - TypeScript 5.9.3 - Core implementation language with strict mode enabled
 - ES2022 (target and module) - Compiled TypeScript output
 ## Runtime
-- Node.js (no specific version constraint in .nvmrc or package.json, supports modern ES2022)
+- Node.js >=20 (declared in `engines`)
 - Yarn 4.13.0 (Berry) with Plug'n'Play (PnP) — no `node_modules` directory
 - Lockfile: Present at `yarn.lock`
 ## Frameworks
-- tsup 8.5.1 - ESM bundler with automatic .d.ts generation and sourcemaps
-- TypeScript 5.9.3 - Strict mode with enhanced type safety
+- TypeScript 5.9.3 - Strict mode with enhanced type safety; project references for per-module incremental builds
 - oxlint 1.56.0 - Fast linter with correctness=error, suspicious/pedantic=warn
 - oxfmt 0.41.0 - Code formatter (Rust-based, aligned with eslint/prettier conventions)
+- vitest 4.1.0 - Test runner (runtime + type-level tests via --typecheck)
 - husky 9.1.7 - Git hooks for pre-commit checks
 - lint-staged 16.4.0 - Runs oxfmt and oxlint on staged .ts files
 ## Key Dependencies
-- rambda 11.1.0 (peer dependency) - Functional utility library
-- TypeScript 5.9.3 - Language and compiler
-- tsup 8.5.1 - Bundler
+- TypeScript 5.9.3 - Language, compiler, and build tool (`tsc --build`)
 - oxlint 1.56.0 - Linter
 - oxfmt 0.41.0 - Formatter
+- vitest 4.1.0 - Test runner
 - husky 9.1.7 - Git hooks
 - lint-staged 16.4.0 - Pre-commit filtering
+- rimraf 6.1.3 - Cross-platform `dist/` cleanup before build
 ## Configuration
 - Config file: `tsconfig.base.json`
-- Key settings:
+- Key settings: strict, ES2022, moduleResolution:bundler, declaration, declarationMap, sourceMap
 - Config file: `tsconfig.json` (at root)
-- Extends base and adds project references for each module: types, map, filter, take, drop, transduce, into, sequence
+- Extends base and adds project references for each module: types, map, filter, take, drop, pipe, transduce, into, sequence
 - File: `package.json`
 - `"type": "module"` - ESM-only package
 - Conditional exports for each function/module (subpath exports in dist/)
-- ESM with .ts extension imports (no CommonJS)
+- ESM with .js extension imports (tsc resolves .ts sources via allowImportingTsExtensions)
 - `.editorconfig` - Enforces UTF-8, LF, 2-space indent, final newline
 - `.husky/pre-commit` - Runs lint-staged
 - `lint-staged` config in package.json - Runs `oxfmt --write` then `oxlint` on staged .ts files
 - `.yarnrc.yml` - Uses yarn release from `.yarn/releases/yarn-4.13.0.cjs`
 ## Build Process
+- Command: `rimraf dist && tsc --build`
 - Location: `dist/`
 - Formats: ESM only (.js)
-- Type declarations: Automatic .d.ts generation with sourcemaps
-- Cleaned on each build (tsup clean: true)
-- Uses project references for incremental builds
+- Type declarations: `.d.ts` + `.d.ts.map` (declarationMap: true)
+- Source maps: `.js.map`
+- Uses project references for incremental, per-module builds
+- `dist/` is cleaned via `rimraf` on each full build
 ## Scripts
 ## Platform Requirements
-- Node.js (modern ES2022 support recommended, no specific version enforced)
+- Node.js >=20
 - Yarn 4.x (uses PnP, requires Yarn 4 specifically)
 - Text editor with EditorConfig support (2-space, LF, UTF-8)
-- ES2022-compatible JavaScript runtime (Node.js 17+, modern browsers)
-- Consumer must have rambda 11.1.0 installed as dependency
+- ES2022-compatible JavaScript runtime (Node.js 18+)
 ## No External Integrations
 - No API clients
 - No database drivers
 - No authentication libraries
 - No external services
+- No runtime dependencies — zero peer deps required
 - Designed as composable transducer functions for algorithmic transformations
 <!-- GSD:stack-end -->
 
@@ -154,8 +159,8 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 - Failures prevent commit until issues are resolved
 ## Import Organization
 - No path aliases are used
-- All imports use relative paths with explicit `.ts` extensions
-- `.ts` extensions are required (enforced by TypeScript config `allowImportingTsExtensions`)
+- All imports use relative paths with explicit `.js` extensions
+- `.js` extensions are required (tsc resolves them to `.ts` sources via `allowImportingTsExtensions`)
 - Type imports and value imports from the same module are on separate lines
 - Type imports use `import type` syntax (TypeScript 3.8+)
 - Explicitly declared imports improve tree-shaking
@@ -213,6 +218,7 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 
 ## Pattern Overview
 - **Function composition focus** — Each transformation (map, filter, take, drop) returns a composable transducer
+- **Built-in pipe** — `pipe` is a first-class export; no external utility library required
 - **Lazy evaluation** — Transducers describe transformations but don't execute until applied via `transduce`, `into`, or `sequence`
 - **Early termination support** — The `Reduced` sentinel enables short-circuiting (used by `take`)
 - **Pluggable reducers** — Transducers are agnostic to the reducing function, enabling reuse across arrays, streams, or custom collectors
@@ -227,6 +233,11 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 - Contains: Factory functions that return `Transducer` instances
 - Depends on: `src/types/`
 - Used by: Consumer code and higher-level abstractions
+- Purpose: Compose transducers left-to-right with full type inference
+- Location: `src/pipe/index.ts`
+- Contains: `pipe()` variadic function using `BuildConstraint` recursive mapped type and `PipeResult`
+- Depends on: `src/types/`
+- Used by: Consumer code
 - Purpose: Execute a transducer pipeline against an iterable with a reducing function
 - Location: `src/transduce/index.ts`
 - Contains: `transduce()` function that iterates, applies transformations, and handles early termination
@@ -263,6 +274,7 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 - `transduce(xform, reducer, init, iterable)` — `src/transduce/index.ts`
 - `into(array, xform, iterable)` — `src/into/index.ts`
 - `sequence(xform, iterable)` — `src/sequence/index.ts`
+- `pipe(...xforms)` — `src/pipe/index.ts` — Compose transducers left-to-right
 - `map(f)` — `src/map/index.ts` — Apply function to each element
 - `filter(pred)` — `src/filter/index.ts` — Keep elements matching predicate
 - `take(n)` — `src/take/index.ts` — Take first n elements with early termination

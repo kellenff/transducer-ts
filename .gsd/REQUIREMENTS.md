@@ -4,16 +4,16 @@ This file is the explicit capability and coverage contract for the project.
 
 ## Active
 
-### R010 — A `toFn` function that wraps a `Transducer<A, B>` into `(coll: Iterable<A>) => B[]`, compatible with rambda's `pipe(value, fn1, fn2, ...)` signature
+### R010 — A `toFn` function that wraps a `Transducer<A, B>` into `(coll: Iterable<A>) => B[]`
 - Class: core-capability
 - Status: active
-- Description: A `toFn` function that wraps a `Transducer<A, B>` into `(coll: Iterable<A>) => B[]`, compatible with rambda's `pipe(value, fn1, fn2, ...)` signature
-- Why it matters: This is the bridge between transducer-ts composition and rambda's data-first pipe
+- Description: A `toFn` function that wraps a `Transducer<A, B>` into `(coll: Iterable<A>) => B[]` — a data-first curried API for use with any left-to-right function composition utility
+- Why it matters: Enables using transducer-ts transducers as data-last pipeline stages in data-first pipe utilities
 - Source: user
 - Primary owning slice: M003/S01
 - Supporting slices: none
 - Validation: unmapped
-- Notes: Deferred to M003; depends on M002 completing the pipe refactor
+- Notes: Deferred to M003; depends on M002 completing the pipe refactor. Previously described as "rambda-compatible" but rambda is no longer a dependency or concern — the signature `(coll: Iterable<A>) => B[]` is a general data-first adapter.
 
 ## Validated
 
