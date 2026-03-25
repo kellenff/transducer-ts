@@ -1,6 +1,6 @@
 import { describe, expectTypeOf, it } from "vitest";
-import { drop, filter, into, map, pipe, sequence, take } from "./index.ts";
-import type { Transducer } from "./index.ts";
+import { drop, filter, into, map, pipe, sequence, take } from "./index.js";
+import type { Transducer } from "./index.js";
 
 describe("type-level assertions", () => {
   it("map infers Transducer<A, B>", () => {

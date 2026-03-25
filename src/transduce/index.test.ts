@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { transduce } from "./index.ts";
-import { map } from "../map/index.ts";
-import { filter } from "../filter/index.ts";
-import { take } from "../take/index.ts";
-import type { Reducer } from "../types/index.ts";
+import { transduce } from "./index.js";
+import { map } from "../map/index.js";
+import { filter } from "../filter/index.js";
+import { take } from "../take/index.js";
+import type { Reducer } from "../types/index.js";
 
 const pushReducer: Reducer<number[], number> = (acc, x) => {
   acc.push(x);

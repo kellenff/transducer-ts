@@ -46,15 +46,15 @@ This is idiomatic TypeScript 4.2+ and simpler than `Extract<keyof T, \`${number}
 
 ---
 
-## tsup DTS: Module-private types stay unexported
+## tsc DTS: Module-private types stay unexported
 
-**Context:** M002/S01 — T02 verified that tsup preserves module-private type aliases.
+**Context:** M002/S01 — verified that tsc preserves module-private type aliases.
 
-tsup faithfully maps source `export` presence to DTS export presence:
+tsc (and tsup, previously used) faithfully maps source `export` presence to DTS export presence:
 - `type Foo = …` (no `export`) → emitted as `type Foo = …` in `.d.ts`, NOT in the `export { … }` block.
 - `export type Foo = …` → emitted in both the body and the export block.
 
-**There is no tsup configuration needed** to keep helper types unexported. Just don't write `export` on them in the source. This pattern is reliable and can be used in any tsup-built module to expose internal type aliases for human inspection (via `.d.ts` readability) without making them part of the public API.
+**No compiler configuration is needed** to keep helper types unexported. Just don't write `export` on them in the source. This pattern is reliable and can be used in any tsc-built module to expose internal type aliases for human inspection (via `.d.ts` readability) without making them part of the public API.
 
 ---
 
@@ -92,6 +92,18 @@ map((x: boolean): number => (x ? 1 : 0))
 ```
 
 This matters in test code where `toEqualTypeOf<Transducer<A, number>>()` fails because the actual inferred type is `Transducer<A, 0 | 1>`. Always use explicit return type annotations on map callbacks in type-level tests when the return value is a literal expression.
+
+---
+
+## TypeScript: BuildConstraint capacity scales with PrevIdx tuple length
+
+**Context:** M002/S02 — verifying that 15-arity pipe chains work.
+
+`PrevIdx` is a fixed-length lookup tuple. The current implementation covers indices 0–20 (21 entries), meaning `BuildConstraint` enforces type constraints for chains of up to 21 transducers. For longer chains, TypeScript falls back to unconstrained behavior rather than erroring — it silently stops checking after position 20.
+
+To extend capacity, simply add more entries to `PrevIdx` in `src/pipe/index.ts`. Each entry costs zero runtime overhead.
+
+The 15-arity test (max index 14) is well within bounds. If a future test needs 25-arity, extend `PrevIdx` to 25 entries first.
 
 ---
 

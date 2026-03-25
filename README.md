@@ -37,7 +37,7 @@ npm install transducer-ts
 yarn add transducer-ts
 ```
 
-No runtime dependencies. `rambda` is an optional peer dependency if you want to use it alongside transducer-ts for other utilities.
+No runtime dependencies.
 
 ## API
 
@@ -198,10 +198,6 @@ This library follows [Clojure's transducer protocol](https://clojure.org/referen
 ### ESM only
 
 This package ships as ESM only (`"type": "module"`). CJS is not supported.
-
-### Rambda peer dependency
-
-`rambda` is listed as an optional peer dependency. It's not required to use this library — `transducer-ts` ships its own `pipe` for transducer composition. Install `rambda` only if you need it for other utilities.
 
 ### Writing custom transducers
 

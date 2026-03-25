@@ -1,4 +1,4 @@
-import type { Reduced, StepFn, Transducer } from "../types/index.ts";
+import type { Reduced, StepFn, Transducer } from "../types/index.js";
 
 /**
  * Returns a transducer that keeps only elements satisfying `pred`.

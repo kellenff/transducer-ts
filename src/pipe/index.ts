@@ -1,4 +1,4 @@
-import type { Transducer } from "../types/index.ts";
+import type { Transducer } from "../types/index.js";
 
 type PipeTypeError<Msg extends string> = {
   readonly __brand: "PipeTypeError";

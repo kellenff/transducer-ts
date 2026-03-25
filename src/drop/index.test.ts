@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { drop } from "./index.ts";
-import { sequence } from "../sequence/index.ts";
-import { into } from "../into/index.ts";
+import { drop } from "./index.js";
+import { sequence } from "../sequence/index.js";
+import { into } from "../into/index.js";
 
 describe("drop", () => {
   it("drops the first n elements", () => {

@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { map } from "./map/index.ts";
-import { filter } from "./filter/index.ts";
-import { take } from "./take/index.ts";
-import { drop } from "./drop/index.ts";
-import { pipe } from "./pipe/index.ts";
-import { sequence } from "./sequence/index.ts";
-import { into } from "./into/index.ts";
+import { map } from "./map/index.js";
+import { filter } from "./filter/index.js";
+import { take } from "./take/index.js";
+import { drop } from "./drop/index.js";
+import { pipe } from "./pipe/index.js";
+import { sequence } from "./sequence/index.js";
+import { into } from "./into/index.js";
 
 describe("pipe composition", () => {
   it("2-deep: map then filter", () => {

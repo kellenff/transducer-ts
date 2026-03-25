@@ -1,5 +1,5 @@
-import type { Reducer, StepFn, Transducer } from "../types/index.ts";
-import { isReduced } from "../types/index.ts";
+import type { Reducer, StepFn, Transducer } from "../types/index.js";
+import { isReduced } from "../types/index.js";
 
 /**
  * Apply a transducer to a collection with a reducing function and initial value.
