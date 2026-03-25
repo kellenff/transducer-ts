@@ -29,13 +29,23 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@fromo/transducer-ts", "workspace:."],\
+          ["@types/lodash", "npm:4.17.24"],\
+          ["@types/ramda", "npm:0.31.1"],\
+          ["@types/underscore", "npm:1.13.0"],\
           ["@vitest/coverage-v8", "virtual:29be690d0d965ecf4c1cd38e52d2480fda5c1ad080ffc2eb1a1f90f94bd8e863ae91e1d41c1e1253489322c493fa4b6e1e3447076215965576d8eaa9fd8b9e71#npm:4.1.0"],\
+          ["fp-ts", "npm:2.16.11"],\
           ["husky", "npm:9.1.7"],\
+          ["itertools", "npm:2.6.0"],\
           ["lint-staged", "npm:16.4.0"],\
+          ["lodash", "npm:4.17.23"],\
           ["oxfmt", "npm:0.41.0"],\
           ["oxlint", "virtual:29be690d0d965ecf4c1cd38e52d2480fda5c1ad080ffc2eb1a1f90f94bd8e863ae91e1d41c1e1253489322c493fa4b6e1e3447076215965576d8eaa9fd8b9e71#npm:1.56.0"],\
+          ["rambda", "npm:11.1.0"],\
+          ["ramda", "npm:0.32.0"],\
+          ["remeda", "npm:2.33.6"],\
           ["rimraf", "npm:6.1.3"],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"],\
+          ["underscore", "npm:1.13.8"],\
           ["vitest", "virtual:29be690d0d965ecf4c1cd38e52d2480fda5c1ad080ffc2eb1a1f90f94bd8e863ae91e1d41c1e1253489322c493fa4b6e1e3447076215965576d8eaa9fd8b9e71#npm:4.1.0"]\
         ],\
         "linkType": "SOFT"\
@@ -125,13 +135,23 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@fromo/transducer-ts", "workspace:."],\
+          ["@types/lodash", "npm:4.17.24"],\
+          ["@types/ramda", "npm:0.31.1"],\
+          ["@types/underscore", "npm:1.13.0"],\
           ["@vitest/coverage-v8", "virtual:29be690d0d965ecf4c1cd38e52d2480fda5c1ad080ffc2eb1a1f90f94bd8e863ae91e1d41c1e1253489322c493fa4b6e1e3447076215965576d8eaa9fd8b9e71#npm:4.1.0"],\
+          ["fp-ts", "npm:2.16.11"],\
           ["husky", "npm:9.1.7"],\
+          ["itertools", "npm:2.6.0"],\
           ["lint-staged", "npm:16.4.0"],\
+          ["lodash", "npm:4.17.23"],\
           ["oxfmt", "npm:0.41.0"],\
           ["oxlint", "virtual:29be690d0d965ecf4c1cd38e52d2480fda5c1ad080ffc2eb1a1f90f94bd8e863ae91e1d41c1e1253489322c493fa4b6e1e3447076215965576d8eaa9fd8b9e71#npm:1.56.0"],\
+          ["rambda", "npm:11.1.0"],\
+          ["ramda", "npm:0.32.0"],\
+          ["remeda", "npm:2.33.6"],\
           ["rimraf", "npm:6.1.3"],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"],\
+          ["underscore", "npm:1.13.8"],\
           ["vitest", "virtual:29be690d0d965ecf4c1cd38e52d2480fda5c1ad080ffc2eb1a1f90f94bd8e863ae91e1d41c1e1253489322c493fa4b6e1e3447076215965576d8eaa9fd8b9e71#npm:4.1.0"]\
         ],\
         "linkType": "SOFT"\
@@ -774,6 +794,34 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@types/lodash", [\
+      ["npm:4.17.24", {\
+        "packageLocation": "../../.yarn/berry/cache/@types-lodash-npm-4.17.24-4a04035060-10c0.zip/node_modules/@types/lodash/",\
+        "packageDependencies": [\
+          ["@types/lodash", "npm:4.17.24"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/ramda", [\
+      ["npm:0.31.1", {\
+        "packageLocation": "../../.yarn/berry/cache/@types-ramda-npm-0.31.1-a5c735bd61-10c0.zip/node_modules/@types/ramda/",\
+        "packageDependencies": [\
+          ["@types/ramda", "npm:0.31.1"],\
+          ["types-ramda", "npm:0.31.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/underscore", [\
+      ["npm:1.13.0", {\
+        "packageLocation": "../../.yarn/berry/cache/@types-underscore-npm-1.13.0-1a86557ba1-10c0.zip/node_modules/@types/underscore/",\
+        "packageDependencies": [\
+          ["@types/underscore", "npm:1.13.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@vitest/coverage-v8", [\
       ["npm:4.1.0", {\
         "packageLocation": "../../.yarn/berry/cache/@vitest-coverage-v8-npm-4.1.0-78fbf6dc32-10c0.zip/node_modules/@vitest/coverage-v8/",\
@@ -1207,6 +1255,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["fp-ts", [\
+      ["npm:2.16.11", {\
+        "packageLocation": "../../.yarn/berry/cache/fp-ts-npm-2.16.11-62e43e1078-10c0.zip/node_modules/fp-ts/",\
+        "packageDependencies": [\
+          ["fp-ts", "npm:2.16.11"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["fs-minipass", [\
       ["npm:3.0.3", {\
         "packageLocation": "../../.yarn/berry/cache/fs-minipass-npm-3.0.3-d148d6ac19-10c0.zip/node_modules/fs-minipass/",\
@@ -1385,6 +1442,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["itertools", [\
+      ["npm:2.6.0", {\
+        "packageLocation": "../../.yarn/berry/cache/itertools-npm-2.6.0-24ec1d3c72-10c0.zip/node_modules/itertools/",\
+        "packageDependencies": [\
+          ["itertools", "npm:2.6.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["js-tokens", [\
       ["npm:10.0.0", {\
         "packageLocation": "../../.yarn/berry/cache/js-tokens-npm-10.0.0-2f75d73bcb-10c0.zip/node_modules/js-tokens/",\
@@ -1540,6 +1606,15 @@ const RAW_RUNTIME_STATE =
           ["log-update", "npm:6.1.0"],\
           ["rfdc", "npm:1.4.1"],\
           ["wrap-ansi", "npm:9.0.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["lodash", [\
+      ["npm:4.17.23", {\
+        "packageLocation": "../../.yarn/berry/cache/lodash-npm-4.17.23-50bdb1c01a-10c0.zip/node_modules/lodash/",\
+        "packageDependencies": [\
+          ["lodash", "npm:4.17.23"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -1941,6 +2016,33 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["rambda", [\
+      ["npm:11.1.0", {\
+        "packageLocation": "../../.yarn/berry/cache/rambda-npm-11.1.0-665b5bfce4-10c0.zip/node_modules/rambda/",\
+        "packageDependencies": [\
+          ["rambda", "npm:11.1.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["ramda", [\
+      ["npm:0.32.0", {\
+        "packageLocation": "../../.yarn/berry/cache/ramda-npm-0.32.0-516282d3a2-10c0.zip/node_modules/ramda/",\
+        "packageDependencies": [\
+          ["ramda", "npm:0.32.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["remeda", [\
+      ["npm:2.33.6", {\
+        "packageLocation": "../../.yarn/berry/cache/remeda-npm-2.33.6-ce6b2daf30-10c0.zip/node_modules/remeda/",\
+        "packageDependencies": [\
+          ["remeda", "npm:2.33.6"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["restore-cursor", [\
       ["npm:5.1.0", {\
         "packageLocation": "../../.yarn/berry/cache/restore-cursor-npm-5.1.0-b8fd1128bf-10c0.zip/node_modules/restore-cursor/",\
@@ -2234,6 +2336,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["ts-toolbelt", [\
+      ["npm:9.6.0", {\
+        "packageLocation": "../../.yarn/berry/cache/ts-toolbelt-npm-9.6.0-a95699c8d0-10c0.zip/node_modules/ts-toolbelt/",\
+        "packageDependencies": [\
+          ["ts-toolbelt", "npm:9.6.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["tslib", [\
       ["npm:2.8.1", {\
         "packageLocation": "../../.yarn/berry/cache/tslib-npm-2.8.1-66590b21b8-10c0.zip/node_modules/tslib/",\
@@ -2243,11 +2354,30 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["types-ramda", [\
+      ["npm:0.31.0", {\
+        "packageLocation": "../../.yarn/berry/cache/types-ramda-npm-0.31.0-80a9562125-10c0.zip/node_modules/types-ramda/",\
+        "packageDependencies": [\
+          ["ts-toolbelt", "npm:9.6.0"],\
+          ["types-ramda", "npm:0.31.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["typescript", [\
       ["patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5", {\
         "packageLocation": "../../.yarn/berry/cache/typescript-patch-6fda4d02cf-10c0.zip/node_modules/typescript/",\
         "packageDependencies": [\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["underscore", [\
+      ["npm:1.13.8", {\
+        "packageLocation": "../../.yarn/berry/cache/underscore-npm-1.13.8-25374eb9a8-10c0.zip/node_modules/underscore/",\
+        "packageDependencies": [\
+          ["underscore", "npm:1.13.8"]\
         ],\
         "linkType": "HARD"\
       }]\
