@@ -1,5 +1,5 @@
-import type { Transducer } from "../types/index.ts";
-import { transduce } from "../transduce/index.ts";
+import type { Transducer } from "../types/index.js";
+import { transduce } from "../transduce/index.js";
 
 /**
  * Transduce `from` into a target array.

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { into } from "./index.ts";
-import { map } from "../map/index.ts";
-import { filter } from "../filter/index.ts";
-import { take } from "../take/index.ts";
+import { into } from "./index.js";
+import { map } from "../map/index.js";
+import { filter } from "../filter/index.js";
+import { take } from "../take/index.js";
 
 describe("into", () => {
   it("transduce into a target array", () => {

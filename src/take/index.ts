@@ -1,5 +1,5 @@
-import type { Reduced, StepFn, Transducer } from "../types/index.ts";
-import { isReduced, reduced } from "../types/index.ts";
+import type { Reduced, StepFn, Transducer } from "../types/index.js";
+import { isReduced, reduced } from "../types/index.js";
 
 /**
  * Returns a transducer that takes the first `n` elements, then terminates early.

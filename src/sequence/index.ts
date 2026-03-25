@@ -1,5 +1,5 @@
-import type { Transducer } from "../types/index.ts";
-import { into } from "../into/index.ts";
+import type { Transducer } from "../types/index.js";
+import { into } from "../into/index.js";
 
 /**
  * Eagerly apply a transducer to a collection and return a new array.

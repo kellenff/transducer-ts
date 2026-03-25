@@ -1,10 +1,9 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "noEmit": true,
-    "emitDeclarationOnly": true,
-    "declarationMap": true
+    "outDir": "dist"
   },
+  "files": ["src/index.ts"],
   "references": [
     { "path": "src/types" },
     { "path": "src/map" },

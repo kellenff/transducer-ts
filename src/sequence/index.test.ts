@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { sequence } from "./index.ts";
-import { map } from "../map/index.ts";
-import { filter } from "../filter/index.ts";
-import { take } from "../take/index.ts";
-import { drop } from "../drop/index.ts";
+import { sequence } from "./index.js";
+import { map } from "../map/index.js";
+import { filter } from "../filter/index.js";
+import { take } from "../take/index.js";
+import { drop } from "../drop/index.js";
 
 describe("sequence", () => {
   it("applies transducer and returns new array", () => {

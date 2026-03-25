@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { take } from "./index.ts";
-import { pipe } from "../pipe/index.ts";
-import { sequence } from "../sequence/index.ts";
-import { transduce } from "../transduce/index.ts";
-import { into } from "../into/index.ts";
+import { take } from "./index.js";
+import { pipe } from "../pipe/index.js";
+import { sequence } from "../sequence/index.js";
+import { transduce } from "../transduce/index.js";
+import { into } from "../into/index.js";
 
 describe("take", () => {
   it("takes the first n elements", () => {

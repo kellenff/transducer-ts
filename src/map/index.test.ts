@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { map } from "./index.ts";
-import { sequence } from "../sequence/index.ts";
-import { into } from "../into/index.ts";
-import { transduce } from "../transduce/index.ts";
+import { map } from "./index.js";
+import { sequence } from "../sequence/index.js";
+import { into } from "../into/index.js";
+import { transduce } from "../transduce/index.js";
 
 describe("map", () => {
   it("transforms each element", () => {
