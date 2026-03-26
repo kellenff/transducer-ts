@@ -1,6 +1,18 @@
 import { describe, expectTypeOf, it } from "vitest";
-import { drop, filter, into, map, pipe, sequence, take, toFn } from "./index.js";
-import type { Transducer } from "./index.js";
+import {
+  drop,
+  filter,
+  filterGuard,
+  into,
+  map,
+  pipe,
+  reduced,
+  sequence,
+  take,
+  toFn,
+  transduce,
+} from "./index.js";
+import type { StepFn, Transducer } from "./index.js";
 
 describe("type-level assertions", () => {
   it("map infers Transducer<A, B>", () => {
@@ -13,6 +25,11 @@ describe("type-level assertions", () => {
 
   it("filter preserves element type", () => {
     expectTypeOf(filter((x: number) => x > 0)).toEqualTypeOf<Transducer<number, number>>();
+  });
+
+  it("filterGuard narrows element type", () => {
+    const isString = (x: string | number): x is string => typeof x === "string";
+    expectTypeOf(filterGuard(isString)).toEqualTypeOf<Transducer<string | number, string>>();
   });
 
   it("take preserves element type", () => {
@@ -73,6 +90,18 @@ describe("type-level assertions", () => {
     const run = toFn(map((x: number) => String(x)));
     expectTypeOf(run).toEqualTypeOf<(coll: Iterable<number>) => string[]>();
   });
+
+  it("transduce accepts StepFn reducers", () => {
+    const step: StepFn<number, number> = (acc, input) => (input > 2 ? reduced(acc) : acc + input);
+    expectTypeOf(
+      transduce(
+        map((x: number) => x),
+        step,
+        0,
+        [1, 2, 3],
+      ),
+    ).toEqualTypeOf<number>();
+  });
 });
 
 describe("pipe high-arity inference", () => {
@@ -121,6 +150,33 @@ describe("pipe high-arity inference", () => {
       map((x: boolean) => (x ? "yes" : "no")),
       filter((s: string) => s.length > 0),
       map((s: string) => s.length),
+    );
+    expectTypeOf(xf).toEqualTypeOf<Transducer<number, number>>();
+  });
+
+  it("pipe 21-arity infers Transducer<number, number>", () => {
+    const xf = pipe(
+      map((x: number) => String(x)),
+      filter((s: string) => s.length > 0),
+      map((s: string) => s.length),
+      filter((x: number) => x > 0),
+      map((x: number) => x > 0),
+      map((x: boolean) => (x ? 1 : 0)),
+      filter((x: number) => x > 0),
+      map((x: number) => String(x)),
+      drop<string>(1),
+      map((s: string) => s.length),
+      take<number>(10),
+      map((x: number) => x > 0),
+      map((x: boolean) => (x ? "yes" : "no")),
+      filter((s: string) => s.length > 0),
+      map((s: string) => s.length),
+      map((x: number) => String(x)),
+      filter((s: string) => s.length > 0),
+      map((s: string) => s.length),
+      map((x: number) => x > 0),
+      map((x: boolean) => (x ? 1 : 0)),
+      map((x: number) => x),
     );
     expectTypeOf(xf).toEqualTypeOf<Transducer<number, number>>();
   });
@@ -176,6 +232,34 @@ describe("pipe mismatch detection", () => {
       drop<string>(1),
       filter((s: string) => s.length > 0),
       map((s: string) => s.length),
+    );
+  });
+
+  it("pipe rejects chains beyond strict arity boundary", () => {
+    pipe(
+      map((x: number) => String(x)),
+      // @ts-expect-error — strict compatibility checks are only guaranteed up to 21 transducers
+      filter((s: string) => s.length > 0),
+      map((s: string) => s.length),
+      filter((x: number) => x > 0),
+      map((x: number) => x > 0),
+      map((x: boolean) => (x ? 1 : 0)),
+      filter((x: number) => x > 0),
+      map((x: number) => String(x)),
+      drop<string>(1),
+      map((s: string) => s.length),
+      take<number>(10),
+      map((x: number) => x > 0),
+      map((x: boolean) => (x ? "yes" : "no")),
+      filter((s: string) => s.length > 0),
+      map((s: string) => s.length),
+      map((x: number) => String(x)),
+      filter((s: string) => s.length > 0),
+      map((s: string) => s.length),
+      map((x: number) => x > 0),
+      map((x: boolean) => (x ? 1 : 0)),
+      map((x: number) => x),
+      map((x: number) => x + 1),
     );
   });
 });
