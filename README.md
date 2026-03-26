@@ -66,6 +66,7 @@ sequence(
 #### `filter<A>(pred: (a: A) => boolean): Transducer<A, A>`
 
 Returns a transducer that keeps only elements satisfying `pred`.
+`filter` intentionally **does not** narrow types; it preserves `A`.
 
 ```typescript
 import { filter, sequence } from "@fromo/transducer-ts";
@@ -75,6 +76,18 @@ sequence(
   [1, 2, 3, 4, 5],
 );
 // => [2, 4]
+```
+
+#### `filterGuard<A, B extends A>(pred: (a: A) => a is B): Transducer<A, B>`
+
+Returns a narrowing transducer for type-guard predicates.
+
+```typescript
+import { filterGuard, sequence } from "@fromo/transducer-ts";
+
+const isString = (x: string | number): x is string => typeof x === "string";
+sequence(filterGuard(isString), [1, "a", 2, "b"]);
+// => ["a", "b"]
 ```
 
 #### `take<A>(n: number): Transducer<A, A>`
@@ -138,7 +151,7 @@ sequence(xform, [1, 2, 3, 4, 5, 6]);
 // => [30, 40, 50]
 ```
 
-Supports high arity with full type inference. TypeScript tracks the input/output type at each step and reports positional mismatch errors when adjacent transducers are incompatible.
+Supports up to 21 transducers with strict compatibility checks and full type inference. TypeScript tracks input/output types at each step and reports positional mismatch errors when adjacent transducers are incompatible.
 
 ### Execution
 
@@ -188,6 +201,8 @@ transduce(
 );
 // => 12
 ```
+
+Also accepts `StepFn<R, B>` reducers that may return `Reduced<R>`.
 
 #### `toFn<A, B>(xform: Transducer<A, B>): (coll: Iterable<A>) => B[]`
 
@@ -268,6 +283,11 @@ yarn test            # run test suite
 yarn test:coverage   # run tests with V8 coverage
 yarn check           # typecheck + lint + fmt:check
 ```
+
+Maintainer docs:
+
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [RELEASING.md](RELEASING.md)
 
 ## License
 

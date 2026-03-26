@@ -34,6 +34,18 @@ describe("take", () => {
     expect(sequence(take(-5), [1, 2, 3])).toEqual([]);
   });
 
+  it("take(NaN) returns empty", () => {
+    expect(sequence(take(Number.NaN), [1, 2, 3])).toEqual([]);
+  });
+
+  it("take(Infinity) returns all elements", () => {
+    expect(sequence(take(Number.POSITIVE_INFINITY), [1, 2, 3])).toEqual([1, 2, 3]);
+  });
+
+  it("take with fractional n effectively rounds up by step count", () => {
+    expect(sequence(take(2.1), [1, 2, 3, 4])).toEqual([1, 2, 3]);
+  });
+
   it("handles empty collection", () => {
     expect(sequence(take(3), [])).toEqual([]);
   });

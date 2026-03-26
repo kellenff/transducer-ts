@@ -1,13 +1,16 @@
 name: Publish
 
 on:
+  workflow_dispatch:
   push:
-    branches: [main]
+    tags:
+      - "v*"
 
 jobs:
   publish:
     name: Check, test & publish
     runs-on: ubuntu-latest
+    environment: npm-publish
 
     steps:
       - uses: actions/checkout@v4

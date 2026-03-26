@@ -32,6 +32,18 @@ describe("drop", () => {
     expect(sequence(drop(-5), [1, 2, 3])).toEqual([1, 2, 3]);
   });
 
+  it("drop(NaN) passes all elements through", () => {
+    expect(sequence(drop(Number.NaN), [1, 2, 3])).toEqual([1, 2, 3]);
+  });
+
+  it("drop(Infinity) drops all elements", () => {
+    expect(sequence(drop(Number.POSITIVE_INFINITY), [1, 2, 3])).toEqual([]);
+  });
+
+  it("drop with fractional n effectively rounds up by step count", () => {
+    expect(sequence(drop(2.1), [1, 2, 3, 4, 5])).toEqual([4, 5]);
+  });
+
   it("handles empty collection", () => {
     expect(sequence(drop(3), [])).toEqual([]);
   });

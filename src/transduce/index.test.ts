@@ -82,4 +82,53 @@ describe("transduce", () => {
     );
     expect(result).toBe("123");
   });
+
+  it("propagates mapper errors", () => {
+    expect(() =>
+      transduce(
+        map((x: number) => {
+          if (x === 2) {
+            throw new Error("boom");
+          }
+          return x;
+        }),
+        pushReducer,
+        [] as number[],
+        [1, 2, 3],
+      ),
+    ).toThrow("boom");
+  });
+
+  it("propagates reducer errors", () => {
+    expect(() =>
+      transduce(
+        map((x: number) => x),
+        (_acc: number[], x: number) => {
+          if (x === 2) {
+            throw new Error("reducer-fail");
+          }
+          return [];
+        },
+        [] as number[],
+        [1, 2, 3],
+      ),
+    ).toThrow("reducer-fail");
+  });
+
+  it("closes iterators on early termination", () => {
+    let finalized = false;
+    function* source(): Generator<number> {
+      try {
+        yield 1;
+        yield 2;
+        yield 3;
+      } finally {
+        finalized = true;
+      }
+    }
+
+    const result = transduce(take<number>(2), pushReducer, [] as number[], source());
+    expect(result).toEqual([1, 2]);
+    expect(finalized).toBe(true);
+  });
 });
