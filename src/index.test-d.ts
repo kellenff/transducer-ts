@@ -1,5 +1,5 @@
 import { describe, expectTypeOf, it } from "vitest";
-import { drop, filter, into, map, pipe, sequence, take } from "./index.js";
+import { drop, filter, into, map, pipe, sequence, take, toFn } from "./index.js";
 import type { Transducer } from "./index.js";
 
 describe("type-level assertions", () => {
@@ -67,6 +67,11 @@ describe("type-level assertions", () => {
       take<number>(5),
     );
     expectTypeOf(sequence(xf, [1, 2, 3])).toEqualTypeOf<number[]>();
+  });
+
+  it("toFn infers data-last function type", () => {
+    const run = toFn(map((x: number) => String(x)));
+    expectTypeOf(run).toEqualTypeOf<(coll: Iterable<number>) => string[]>();
   });
 });
 

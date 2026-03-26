@@ -11,7 +11,7 @@ Transducers are composable, reusable transformations decoupled from their data s
 - **Compose via function composition** — build pipelines with `pipe`, apply them to any collection
 
 ```typescript
-import { map, filter, take, pipe, sequence } from "transducer-ts";
+import { map, filter, take, pipe, sequence } from "@fromo/transducer-ts";
 
 // Build a pipeline — no data processed yet
 const xform = pipe(
@@ -32,9 +32,9 @@ sequence(xform, new Set([1, 2, 3, 4, 5, 6]));
 ## Install
 
 ```bash
-npm install transducer-ts
+npm install @fromo/transducer-ts
 # or
-yarn add transducer-ts
+yarn add @fromo/transducer-ts
 ```
 
 No runtime dependencies.
@@ -48,12 +48,18 @@ No runtime dependencies.
 Returns a transducer that applies `f` to each element.
 
 ```typescript
-import { map, sequence } from "transducer-ts";
+import { map, sequence } from "@fromo/transducer-ts";
 
-sequence(map((x: number) => x * 2), [1, 2, 3]);
+sequence(
+  map((x: number) => x * 2),
+  [1, 2, 3],
+);
 // => [2, 4, 6]
 
-sequence(map((x: number) => String(x)), [1, 2, 3]);
+sequence(
+  map((x: number) => String(x)),
+  [1, 2, 3],
+);
 // => ["1", "2", "3"]
 ```
 
@@ -62,9 +68,12 @@ sequence(map((x: number) => String(x)), [1, 2, 3]);
 Returns a transducer that keeps only elements satisfying `pred`.
 
 ```typescript
-import { filter, sequence } from "transducer-ts";
+import { filter, sequence } from "@fromo/transducer-ts";
 
-sequence(filter((x: number) => x % 2 === 0), [1, 2, 3, 4, 5]);
+sequence(
+  filter((x: number) => x % 2 === 0),
+  [1, 2, 3, 4, 5],
+);
 // => [2, 4]
 ```
 
@@ -73,7 +82,7 @@ sequence(filter((x: number) => x % 2 === 0), [1, 2, 3, 4, 5]);
 Returns a transducer that takes the first `n` elements, then terminates early. Negative values of `n` are treated as `0` (Clojure semantics — returns empty).
 
 ```typescript
-import { take, sequence } from "transducer-ts";
+import { take, sequence } from "@fromo/transducer-ts";
 
 sequence(take(3), [1, 2, 3, 4, 5]);
 // => [1, 2, 3]
@@ -85,10 +94,13 @@ sequence(take(0), [1, 2, 3]);
 **Early termination**: `take` signals the driver loop to stop processing after `n` elements. When used in a `pipe` pipeline, upstream transducers are also short-circuited — no unnecessary work is done.
 
 ```typescript
-import { map, take, pipe, sequence } from "transducer-ts";
+import { map, take, pipe, sequence } from "@fromo/transducer-ts";
 
 // Only the first 2 elements are ever processed by map
-const xf = pipe(map((x: number) => x * 100), take(2));
+const xf = pipe(
+  map((x: number) => x * 100),
+  take(2),
+);
 sequence(xf, [1, 2, 3, 4, 5]);
 // => [100, 200]  (elements 3, 4, 5 never touch map)
 ```
@@ -98,7 +110,7 @@ sequence(xf, [1, 2, 3, 4, 5]);
 Returns a transducer that skips the first `n` elements. Negative values of `n` are treated as `0` (Clojure semantics — passes all elements through).
 
 ```typescript
-import { drop, sequence } from "transducer-ts";
+import { drop, sequence } from "@fromo/transducer-ts";
 
 sequence(drop(2), [1, 2, 3, 4, 5]);
 // => [3, 4, 5]
@@ -114,19 +126,19 @@ sequence(drop(0), [1, 2, 3]);
 Compose transducers left-to-right. Input is processed by the first transducer, then the second, and so on.
 
 ```typescript
-import { map, filter, take, pipe, sequence } from "transducer-ts";
+import { map, filter, take, pipe, sequence } from "@fromo/transducer-ts";
 
 const xform = pipe(
-  filter((x: number) => x > 2),   // keep elements > 2
-  map((x: number) => x * 10),     // multiply by 10
-  take(3),                          // take first 3 results
+  filter((x: number) => x > 2), // keep elements > 2
+  map((x: number) => x * 10), // multiply by 10
+  take(3), // take first 3 results
 );
 
 sequence(xform, [1, 2, 3, 4, 5, 6]);
 // => [30, 40, 50]
 ```
 
-Supports up to 5-arity with full type inference. TypeScript tracks the input/output type at each step.
+Supports high arity with full type inference. TypeScript tracks the input/output type at each step and reports positional mismatch errors when adjacent transducers are incompatible.
 
 ### Execution
 
@@ -135,9 +147,12 @@ Supports up to 5-arity with full type inference. TypeScript tracks the input/out
 Eagerly apply a transducer to a collection and return a new array. The most common way to run a transducer.
 
 ```typescript
-import { map, sequence } from "transducer-ts";
+import { map, sequence } from "@fromo/transducer-ts";
 
-sequence(map((x: number) => x * 2), [1, 2, 3]);
+sequence(
+  map((x: number) => x * 2),
+  [1, 2, 3],
+);
 // => [2, 4, 6]
 ```
 
@@ -146,10 +161,14 @@ sequence(map((x: number) => x * 2), [1, 2, 3]);
 Transduce `from` into an existing target array. Returns the same array reference.
 
 ```typescript
-import { filter, into } from "transducer-ts";
+import { filter, into } from "@fromo/transducer-ts";
 
 const result: number[] = [];
-into(result, filter((x: number) => x > 2), [1, 2, 3, 4]);
+into(
+  result,
+  filter((x: number) => x > 2),
+  [1, 2, 3, 4],
+);
 // result === [3, 4]
 ```
 
@@ -158,7 +177,7 @@ into(result, filter((x: number) => x > 2), [1, 2, 3, 4]);
 Apply a transducer with a custom reducing function and initial accumulator. Use this when you need a result type other than an array.
 
 ```typescript
-import { filter, transduce } from "transducer-ts";
+import { filter, transduce } from "@fromo/transducer-ts";
 
 // Sum even numbers
 transduce(
@@ -170,27 +189,51 @@ transduce(
 // => 12
 ```
 
+#### `toFn<A, B>(xform: Transducer<A, B>): (coll: Iterable<A>) => B[]`
+
+Wrap a transducer into a reusable data-last function. Useful as a stage in any left-to-right function composition utility.
+
+```typescript
+import { filter, map, pipe, toFn } from "@fromo/transducer-ts";
+
+const process = toFn(
+  pipe(
+    filter((x: number) => x % 2 === 0),
+    map((x: number) => x * 10),
+  ),
+);
+
+process([1, 2, 3, 4, 5, 6]);
+// => [20, 40, 60]
+```
+
 ### Types
 
 ```typescript
-import type { Reducer, StepFn, Transducer, Reduced } from "transducer-ts";
-import { reduced, isReduced } from "transducer-ts";
+import type {
+  Reducer,
+  StepFn,
+  Transducer,
+  Reduced,
+} from "@fromo/transducer-ts";
+import { reduced, isReduced } from "@fromo/transducer-ts";
 ```
 
-| Type / Value              | Description                                                            |
-| ------------------------- | ---------------------------------------------------------------------- |
-| `Reducer<A, B>`           | `(acc: A, input: B) => A` — consumer-facing reducing function          |
-| `StepFn<R, A>`            | `(acc: R, input: A) => R \| Reduced<R>` — internal step function       |
-| `Transducer<A, B>`        | `<R>(rf: StepFn<R, B>) => StepFn<R, A>` — composable transformation   |
-| `Reduced<T>`              | Sentinel interface signaling early termination                         |
-| `reduced(value)`          | Wrap a value to signal early termination                               |
-| `isReduced(x)`            | Type guard: `true` if `x` is a `Reduced<T>`                           |
+| Type / Value       | Description                                                         |
+| ------------------ | ------------------------------------------------------------------- |
+| `Reducer<A, B>`    | `(acc: A, input: B) => A` — consumer-facing reducing function       |
+| `StepFn<R, A>`     | `(acc: R, input: A) => R \| Reduced<R>` — internal step function    |
+| `Transducer<A, B>` | `<R>(rf: StepFn<R, B>) => StepFn<R, A>` — composable transformation |
+| `Reduced<T>`       | Sentinel interface signaling early termination                      |
+| `reduced(value)`   | Wrap a value to signal early termination                            |
+| `isReduced(x)`     | Type guard: `true` if `x` is a `Reduced<T>`                         |
 
 ## Design Notes
 
 ### Clojure semantics
 
 This library follows [Clojure's transducer protocol](https://clojure.org/reference/transducers) for behavioral decisions. Specifically:
+
 - `take(n)` where `n ≤ 0` returns an empty result (same as `take(0)`)
 - `drop(n)` where `n ≤ 0` passes all elements through (same as `drop(0)`)
 - Early termination via the `Reduced` sentinel is the correct mechanism — not exceptions
@@ -204,7 +247,7 @@ This package ships as ESM only (`"type": "module"`). CJS is not supported.
 Transducers follow this pattern:
 
 ```typescript
-import type { StepFn, Transducer } from "transducer-ts";
+import type { Reduced, StepFn, Transducer } from "@fromo/transducer-ts";
 
 function myTransducer<A>(/* config */): Transducer<A, A> {
   return <R>(rf: StepFn<R, A>): StepFn<R, A> =>

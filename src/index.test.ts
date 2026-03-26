@@ -6,6 +6,7 @@ import { drop } from "./drop/index.js";
 import { pipe } from "./pipe/index.js";
 import { sequence } from "./sequence/index.js";
 import { into } from "./into/index.js";
+import { toFn } from "./toFn/index.js";
 
 describe("pipe composition", () => {
   it("2-deep: map then filter", () => {
@@ -120,5 +121,15 @@ describe("edge case matrix", () => {
       map((x: number) => x * 3),
     );
     expect(into([], xf, [1, 2, 3, 4, 5, 6])).toEqual([6, 12, 18]);
+  });
+
+  it("barrel-style data-last execution works via toFn", () => {
+    const run = toFn(
+      pipe(
+        filter((x: number) => x % 2 === 0),
+        map((x: number) => x + 1),
+      ),
+    );
+    expect(run([1, 2, 3, 4])).toEqual([3, 5]);
   });
 });
