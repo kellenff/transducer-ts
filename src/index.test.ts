@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { map } from "./map/index.js";
 import { filter } from "./filter/index.js";
+import { filterGuard } from "./filterGuard/index.js";
 import { take } from "./take/index.js";
 import { drop } from "./drop/index.js";
 import { pipe } from "./pipe/index.js";
@@ -131,5 +132,14 @@ describe("edge case matrix", () => {
       ),
     );
     expect(run([1, 2, 3, 4])).toEqual([3, 5]);
+  });
+
+  it("barrel-style narrowing pipeline works via filterGuard", () => {
+    const isString = (x: string | number): x is string => typeof x === "string";
+    const xf = pipe(
+      filterGuard(isString),
+      map((s: string) => s.length),
+    );
+    expect(sequence(xf, [1, "aa", 2, "bbb"])).toEqual([2, 3]);
   });
 });

@@ -2,6 +2,7 @@ export type { Reducer, StepFn, Transducer, Reduced } from "./types/index.js";
 export { reduced, isReduced } from "./types/index.js";
 export { map } from "./map/index.js";
 export { filter } from "./filter/index.js";
+export { filterGuard } from "./filterGuard/index.js";
 export { take } from "./take/index.js";
 export { drop } from "./drop/index.js";
 export { pipe } from "./pipe/index.js";

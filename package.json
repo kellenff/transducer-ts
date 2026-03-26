@@ -43,6 +43,10 @@
       "types": "./dist/filter/index.d.ts",
       "import": "./dist/filter/index.js"
     },
+    "./filterGuard": {
+      "types": "./dist/filterGuard/index.d.ts",
+      "import": "./dist/filterGuard/index.js"
+    },
     "./take": {
       "types": "./dist/take/index.d.ts",
       "import": "./dist/take/index.js"

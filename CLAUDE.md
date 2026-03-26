@@ -25,7 +25,7 @@ yarn test:coverage # vitest run --coverage
 One module per exported function, each in its own directory under `src/` with a dedicated `tsconfig.json` (project references). The dependency graph:
 
 ```
-types ← map, filter, take, drop, pipe
+types ← map, filter, filterGuard, take, drop, pipe
 types ← transduce
 types, transduce ← into
 types, into ← sequence
@@ -69,6 +69,7 @@ sequence(xform, [1, 2, 3, 4, 5, 6, 7, 8]);
 ```
 
 **Key points for consumers:**
+
 - `pipe` composes transducers left-to-right with full type inference at any arity
 - `sequence(xform, coll)` is the simplest way to execute — returns a new array
 - `into(target, xform, coll)` appends to an existing array
@@ -83,6 +84,7 @@ sequence(xform, [1, 2, 3, 4, 5, 6, 7, 8]);
 See `AGENTS.md` for non-inferable codebase context (Yarn PnP setup, project references, type system details, gotchas).
 
 <!-- GSD:project-start source:PROJECT.md -->
+
 ## Project
 
 **transducer-ts**
@@ -100,23 +102,31 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 <!-- GSD:project-end -->
 
 <!-- GSD:stack-start source:codebase/STACK.md -->
+
 ## Technology Stack
 
 ## Languages
+
 - TypeScript 5.9.3 - Core implementation language with strict mode enabled
 - ES2022 (target and module) - Compiled TypeScript output
+
 ## Runtime
+
 - Node.js >=20 (declared in `engines`)
 - Yarn 4.13.0 (Berry) with Plug'n'Play (PnP) — no `node_modules` directory
 - Lockfile: Present at `yarn.lock`
+
 ## Frameworks
+
 - TypeScript 5.9.3 - Strict mode with enhanced type safety; project references for per-module incremental builds
 - oxlint 1.56.0 - Fast linter with correctness=error, suspicious/pedantic=warn
 - oxfmt 0.41.0 - Code formatter (Rust-based, aligned with eslint/prettier conventions)
 - vitest 4.1.0 - Test runner (runtime + type-level tests via --typecheck)
 - husky 9.1.7 - Git hooks for pre-commit checks
 - lint-staged 16.4.0 - Runs oxfmt and oxlint on staged .ts files
+
 ## Key Dependencies
+
 - TypeScript 5.9.3 - Language, compiler, and build tool (`tsc --build`)
 - oxlint 1.56.0 - Linter
 - oxfmt 0.41.0 - Formatter
@@ -124,7 +134,9 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 - husky 9.1.7 - Git hooks
 - lint-staged 16.4.0 - Pre-commit filtering
 - rimraf 6.1.3 - Cross-platform `dist/` cleanup before build
+
 ## Configuration
+
 - Config file: `tsconfig.base.json`
 - Key settings: strict, ES2022, moduleResolution:bundler, declaration, declarationMap, sourceMap
 - Config file: `tsconfig.json` (at root)
@@ -137,7 +149,9 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 - `.husky/pre-commit` - Runs lint-staged
 - `lint-staged` config in package.json - Runs `oxfmt --write` then `oxlint` on staged .ts files
 - `.yarnrc.yml` - Uses yarn release from `.yarn/releases/yarn-4.13.0.cjs`
+
 ## Build Process
+
 - Command: `rimraf dist && tsc --build`
 - Location: `dist/`
 - Formats: ESM only (.js)
@@ -145,13 +159,18 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 - Source maps: `.js.map`
 - Uses project references for incremental, per-module builds
 - `dist/` is cleaned via `rimraf` on each full build
+
 ## Scripts
+
 ## Platform Requirements
+
 - Node.js >=20
 - Yarn 4.x (uses PnP, requires Yarn 4 specifically)
 - Text editor with EditorConfig support (2-space, LF, UTF-8)
 - ES2022-compatible JavaScript runtime (Node.js 18+)
+
 ## No External Integrations
+
 - No API clients
 - No database drivers
 - No authentication libraries
@@ -161,9 +180,11 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 <!-- GSD:stack-end -->
 
 <!-- GSD:conventions-start source:CONVENTIONS.md -->
+
 ## Conventions
 
 ## Naming Patterns
+
 - All source files are named `index.ts` and live in module directories (e.g., `src/map/index.ts`, `src/filter/index.ts`)
 - Module directories use lowercase names matching the function they export (e.g., `src/map/`, `src/types/`, `src/transduce/`)
 - Each module has its own `tsconfig.json` alongside the `index.ts`
@@ -177,7 +198,9 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 - Exported types use PascalCase (e.g., `Reducer`, `Transducer`, `Reduced`)
 - Type parameters use single uppercase letters (e.g., `A`, `B`, `R`, `T`)
 - Generic type syntax separates type parameters clearly: `<A, B>` not `<A,B>`
+
 ## Code Style
+
 - 2-space indentation (enforced by `.editorconfig`)
 - LF line endings (enforced by `.editorconfig`)
 - UTF-8 encoding (enforced by `.editorconfig`)
@@ -189,14 +212,18 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 - Husky pre-commit hook runs `lint-staged` (see `package.json` lint-staged config)
 - Staged `.ts` files are automatically formatted with `oxfmt --write` and linted with `oxlint`
 - Failures prevent commit until issues are resolved
+
 ## Import Organization
+
 - No path aliases are used
 - All imports use relative paths with explicit `.js` extensions
 - `.js` extensions are required (tsc resolves them to `.ts` sources via `allowImportingTsExtensions`)
 - Type imports and value imports from the same module are on separate lines
 - Type imports use `import type` syntax (TypeScript 3.8+)
 - Explicitly declared imports improve tree-shaking
+
 ## Error Handling
+
 - No explicit error throwing in library code
 - Library uses `Reduced<T>` sentinel pattern for early termination (not exceptions)
 - `isReduced()` type guard checks for termination condition
@@ -204,15 +231,20 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 - `reduced(value)` wraps a result to signal termination
 - Example from `src/take/index.ts`:
 - Consuming code (`transduce`) checks with `isReduced()` and unwraps with `.value`
+
 ## Logging
+
 ## Comments
+
 - JSDoc comments on public exported functions describing purpose and behavior
 - Comments are concise (one-line per feature)
 - Comments appear above the function signature
 - Single-line JSDoc comments describe the high-level purpose
 - No parameter descriptions (parameters are self-documenting through type signatures)
 - No return type descriptions (return type is explicit in signature)
+
 ## Function Design
+
 - Library consists of small, composable functions
 - Most transducers are higher-order functions returning closures
 - Complexity is managed through functional composition, not large functions
@@ -223,7 +255,9 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 - Reducing functions return the accumulator
 - Terminal functions (`transduce`, `into`, `sequence`) return computed values
 - No implicit undefined returns (all code paths explicitly return values)
+
 ## Module Design
+
 - Each module exports a single primary function as the default-like export
 - Module barrel file (`src/index.ts`) re-exports all public functions and types
 - Type exports use `export type` syntax, value exports use `export`
@@ -232,7 +266,9 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 - It re-exports all public API (all transducers, types, and utilities)
 - Module-level barrel files not used (each module has single `index.ts`)
 - Consumers can import specific modules: `import { map } from "transducer-ts/map"` or all from main: `import { map } from "transducer-ts"`
+
 ## Type Strictness
+
 - `strict: true` - all strict flags enabled
 - `noUncheckedIndexedAccess: true` - no implicit array indexing
 - `noPropertyAccessFromIndexSignature: true` - strict property access
@@ -246,15 +282,19 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 <!-- GSD:conventions-end -->
 
 <!-- GSD:architecture-start source:ARCHITECTURE.md -->
+
 ## Architecture
 
 ## Pattern Overview
+
 - **Function composition focus** — Each transformation (map, filter, take, drop) returns a composable transducer
 - **Built-in pipe** — `pipe` is a first-class export; no external utility library required
 - **Lazy evaluation** — Transducers describe transformations but don't execute until applied via `transduce`, `into`, or `sequence`
 - **Early termination support** — The `Reduced` sentinel enables short-circuiting (used by `take`)
 - **Pluggable reducers** — Transducers are agnostic to the reducing function, enabling reuse across arrays, streams, or custom collectors
+
 ## Layers
+
 - Purpose: Define the core abstractions
 - Location: `src/types/index.ts`
 - Contains: `Reducer<A, B>` type, `Transducer<A, B>` type, `Reduced<T>` interface, and sentinel helpers
@@ -283,13 +323,17 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 - Purpose: Barrel re-export all public APIs
 - Location: `src/index.ts`
 - Exports: All types and functions for consumers
+
 ## Data Flow
+
 - `into(array, xform, iterable)` — wraps execution with an array push reducer
 - `sequence(xform, iterable)` — wraps execution with an empty array and into
 - **Transducer state** — Captured in closure (e.g., `taken` counter in `take`, `dropped` counter in `drop`)
 - **Accumulator state** — Passed immutably through the reduction chain
 - **Early termination** — Signaled via `Reduced` wrapper, checked after each step
+
 ## Key Abstractions
+
 - Purpose: Function that combines an accumulator with a new value
 - Type: `Reducer<A, B> = (acc: A, input: B) => A`
 - Examples: `(acc: number[], x: number) => { acc.push(x); return acc; }`
@@ -302,7 +346,9 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 - Type: `Reduced<T>` interface with `value` and `__reduced` flag
 - Usage: Returned by transducers like `take` when limit is reached
 - Pattern: Type-safe way to distinguish early termination from normal values
+
 ## Entry Points
+
 - `transduce(xform, reducer, init, iterable)` — `src/transduce/index.ts`
 - `into(array, xform, iterable)` — `src/into/index.ts`
 - `sequence(xform, iterable)` — `src/sequence/index.ts`
@@ -311,32 +357,43 @@ A TypeScript port of Clojure's transducers — composable, type-safe algorithmic
 - `filter(pred)` — `src/filter/index.ts` — Keep elements matching predicate
 - `take(n)` — `src/take/index.ts` — Take first n elements with early termination
 - `drop(n)` — `src/drop/index.ts` — Skip first n elements
+
 ## Error Handling
+
 - Synchronous errors in reducer functions bubble up to caller
 - Synchronous errors in transducer functions (map, filter predicates) bubble up to caller
 - Early termination via `Reduced` for control flow (not errors)
 - Type system provides compile-time guarantees (strict TypeScript with `noUncheckedIndexedAccess`)
+
 ## Cross-Cutting Concerns
+
 ```typescript
+
 ```
+
 <!-- GSD:architecture-end -->
 
 <!-- GSD:workflow-start source:GSD defaults -->
+
 ## GSD Workflow Enforcement
 
 Before using Edit, Write, or other file-changing tools, start work through a GSD command so planning artifacts and execution context stay in sync.
 
 Use these entry points:
+
 - `/gsd:quick` for small fixes, doc updates, and ad-hoc tasks
 - `/gsd:debug` for investigation and bug fixing
 - `/gsd:execute-phase` for planned phase work
 
 Do not make direct repo edits outside a GSD workflow unless the user explicitly asks to bypass it.
+
 <!-- GSD:workflow-end -->
 
 <!-- GSD:profile-start -->
+
 ## Developer Profile
 
 > Profile not yet configured. Run `/gsd:profile-user` to generate your developer profile.
 > This section is managed by `generate-claude-profile` -- do not edit manually.
+
 <!-- GSD:profile-end -->

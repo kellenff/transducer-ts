@@ -47,6 +47,38 @@ type BuildConstraint<T extends readonly Transducer<any, any>[]> = {
     : T[K];
 };
 
+type MaxCheckedArity = 21;
+type SupportedPipeLengths =
+  | 0
+  | 1
+  | 2
+  | 3
+  | 4
+  | 5
+  | 6
+  | 7
+  | 8
+  | 9
+  | 10
+  | 11
+  | 12
+  | 13
+  | 14
+  | 15
+  | 16
+  | 17
+  | 18
+  | 19
+  | 20
+  | 21;
+type EnforceMaxArity<T extends readonly Transducer<any, any>[]> = number extends T["length"]
+  ? T
+  : T["length"] extends SupportedPipeLengths
+    ? T
+    : readonly [
+        PipeTypeError<`pipe currently supports up to ${MaxCheckedArity} transducers for strict compatibility checks`>,
+      ];
+
 type LastOf<T extends readonly any[]> = T extends readonly [...any[], infer L] ? L : never;
 
 // Extracts Transducer<InputOfFirst, OutputOfLast> from a validated tuple.
@@ -72,7 +104,7 @@ type PipeResult<T extends readonly Transducer<any, any>[]> = T extends readonly 
  * // => [30, 40, 50]
  */
 export function pipe<const T extends readonly Transducer<any, any>[]>(
-  ...xforms: BuildConstraint<T> extends T ? T : BuildConstraint<T>
+  ...xforms: EnforceMaxArity<BuildConstraint<T> extends T ? T : BuildConstraint<T>>
 ): PipeResult<T>;
 export function pipe(...xforms: Transducer<any, any>[]): Transducer<any, any> {
   return (rf) => xforms.reduceRight((acc, xf) => xf(acc), rf);

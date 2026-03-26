@@ -75,10 +75,20 @@ sequence(map((x: number) => x * 2), [1, 2, 3]);
 
 #### `filter<A>(pred: (a: A) => boolean): Transducer<A, A>`
 Returns a transducer that keeps only elements satisfying `pred`.
+`filter` intentionally preserves `A` and does not narrow.
 
 ```typescript
 sequence(filter((x: number) => x % 2 === 0), [1, 2, 3, 4, 5]);
 // => [2, 4]
+```
+
+#### `filterGuard<A, B extends A>(pred: (a: A) => a is B): Transducer<A, B>`
+Returns a narrowing transducer for type-guard predicates.
+
+```typescript
+const isString = (x: string | number): x is string => typeof x === "string";
+sequence(filterGuard(isString), [1, "a", 2, "b"]);
+// => ["a", "b"]
 ```
 
 #### `take<A>(n: number): Transducer<A, A>`
@@ -100,7 +110,7 @@ sequence(drop(2), [1, 2, 3, 4, 5]);
 ### Composition
 
 #### `pipe(...xforms): Transducer`
-Compose transducers left-to-right with full type inference at any arity. Type mismatches produce branded `PipeTypeError` messages indicating the position.
+Compose transducers left-to-right with strict compatibility checks up to 21 transducers. Type mismatches produce branded `PipeTypeError` messages indicating the position.
 
 ```typescript
 const xform = pipe(
@@ -134,6 +144,7 @@ into(result, filter((x: number) => x > 2), [1, 2, 3, 4]);
 
 #### `transduce<A, B, R>(xform: Transducer<A, B>, rf: Reducer<R, B>, init: R, coll: Iterable<A>): R`
 Apply a transducer with a custom reducing function and initial value. Use this when the result type is not an array.
+Also accepts `StepFn<R, B>` reducers that can return `Reduced<R>`.
 
 ```typescript
 transduce(
@@ -177,6 +188,7 @@ Each function is available as a subpath import:
 ```typescript
 import { map } from "@fromo/transducer-ts/map";
 import { filter } from "@fromo/transducer-ts/filter";
+import { filterGuard } from "@fromo/transducer-ts/filterGuard";
 import { pipe } from "@fromo/transducer-ts/pipe";
 import { sequence } from "@fromo/transducer-ts/sequence";
 import { toFn } from "@fromo/transducer-ts/toFn";

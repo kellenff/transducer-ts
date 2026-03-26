@@ -8,6 +8,7 @@
     { "path": "src/types" },
     { "path": "src/map" },
     { "path": "src/filter" },
+    { "path": "src/filterGuard" },
     { "path": "src/take" },
     { "path": "src/drop" },
     { "path": "src/pipe" },

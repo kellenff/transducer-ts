@@ -26,8 +26,35 @@ export function transduce<A, B, R>(
   rf: Reducer<R, B>,
   init: R,
   coll: Iterable<A>,
+): R;
+
+/**
+ * Apply a transducer to a collection with a step function and initial value.
+ * Use this overload when your reducing function may return a Reduced sentinel.
+ */
+export function transduce<A, B, R>(
+  xform: Transducer<A, B>,
+  rf: StepFn<R, B>,
+  init: R,
+  coll: Iterable<A>,
+): R;
+export function transduce<A, B, R>(
+  xform: Transducer<A, B>,
+  rf: Reducer<R, B> | StepFn<R, B>,
+  init: R,
+  coll: Iterable<A>,
 ): R {
-  const xrf = xform(rf as StepFn<R, B>);
+  return transduceStep(xform, rf, init, coll);
+}
+
+function transduceStep<A, B, R>(
+  xform: Transducer<A, B>,
+  rf: Reducer<R, B> | StepFn<R, B>,
+  init: R,
+  coll: Iterable<A>,
+): R {
+  const stepRf: StepFn<R, B> = (acc: R, input: B) => rf(acc, input);
+  const xrf = xform(stepRf);
   let acc: R = init;
   for (const item of coll) {
     const stepResult = xrf(acc, item);
