@@ -13,6 +13,7 @@
     { "path": "src/pipe" },
     { "path": "src/transduce" },
     { "path": "src/into" },
-    { "path": "src/sequence" }
+    { "path": "src/sequence" },
+    { "path": "src/toFn" }
   ]
 }

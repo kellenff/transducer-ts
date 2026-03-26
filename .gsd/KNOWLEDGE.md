@@ -195,3 +195,13 @@ Any ramda/rambda function that has been fully applied (not waiting for more argu
 **Context:** M003/S01 — rambda example file.
 
 Rambda 11.x has moved away from being a ramda subset and now focuses on collection/object utilities. It **does not include** `R.add`, `R.multiply`, `R.negate`, `R.inc`, `R.dec`, or other arithmetic helpers that ramda exports. Test against actual Rambda exports rather than assuming parity with ramda.
+
+---
+
+## npm pack fails under Yarn PnP — use yarn pack
+
+**Context:** M004/S02 — verifying llms.txt appears in npm tarball.
+
+`npm pack --dry-run` triggers the `prepare` lifecycle script, which runs `husky`. Under Yarn PnP, `husky` isn't on the system PATH (it's managed by PnP), so npm fails with `sh: husky: command not found`.
+
+**Use `yarn pack --dry-run` instead.** It lists included files without triggering lifecycle scripts and works correctly under PnP.

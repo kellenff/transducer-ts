@@ -1,0 +1,213 @@
+# transducer-ts
+
+> Type-safe Clojure-style transducers for TypeScript. Composable algorithmic transformations with full type inference. Zero runtime dependencies.
+
+## Overview
+
+transducer-ts is a TypeScript port of Clojure's transducers. Transducers are composable algorithmic transformations — they describe what to do (map, filter, take, drop) without coupling to the data source. Compose them with `pipe`, execute them with `sequence`, `into`, or `transduce`.
+
+- ESM-only, ships `.d.ts` + `.d.ts.map` declaration files
+- TypeScript strict mode with `isolatedDeclarations`
+- No runtime dependencies — `pipe` is built-in
+- Works with any `Iterable`
+
+## Installation
+
+```
+npm install @fromo/transducer-ts
+```
+
+## Quick Start
+
+```typescript
+import { pipe, map, filter, take, sequence } from "@fromo/transducer-ts";
+
+const xform = pipe(
+  filter((x: number) => x % 2 === 0),
+  map((x: number) => x * 10),
+  take(3),
+);
+
+sequence(xform, [1, 2, 3, 4, 5, 6, 7, 8]);
+// => [20, 40, 60]
+```
+
+## API
+
+### Types
+
+#### `Reducer<A, B>`
+```typescript
+type Reducer<A, B> = (acc: A, input: B) => A;
+```
+A reducing function: takes an accumulator and an input, returns a new accumulator.
+
+#### `StepFn<R, A>`
+```typescript
+type StepFn<R, A> = (acc: R, input: A) => R | Reduced<R>;
+```
+Like a Reducer but may signal early termination via `Reduced`. Used internally by transducers.
+
+#### `Transducer<A, B>`
+```typescript
+type Transducer<A, B> = <R>(rf: StepFn<R, B>) => StepFn<R, A>;
+```
+A transducer transforms one step function into another. Transducers compose left-to-right and are agnostic to the data source.
+
+#### `Reduced<T>`
+```typescript
+interface Reduced<T> {
+  readonly value: T;
+  readonly __reduced: true;
+}
+```
+Sentinel value wrapping a result to signal early termination.
+
+### Transducers
+
+#### `map<A, B>(f: (a: A) => B): Transducer<A, B>`
+Returns a transducer that applies `f` to each element.
+
+```typescript
+sequence(map((x: number) => x * 2), [1, 2, 3]);
+// => [2, 4, 6]
+```
+
+#### `filter<A>(pred: (a: A) => boolean): Transducer<A, A>`
+Returns a transducer that keeps only elements satisfying `pred`.
+
+```typescript
+sequence(filter((x: number) => x % 2 === 0), [1, 2, 3, 4, 5]);
+// => [2, 4]
+```
+
+#### `take<A>(n: number): Transducer<A, A>`
+Returns a transducer that takes the first `n` elements, then terminates early. Negative `n` is treated as 0 (Clojure semantics).
+
+```typescript
+sequence(take(3), [1, 2, 3, 4, 5]);
+// => [1, 2, 3]
+```
+
+#### `drop<A>(n: number): Transducer<A, A>`
+Returns a transducer that skips the first `n` elements. Negative `n` is treated as 0 (Clojure semantics).
+
+```typescript
+sequence(drop(2), [1, 2, 3, 4, 5]);
+// => [3, 4, 5]
+```
+
+### Composition
+
+#### `pipe(...xforms): Transducer`
+Compose transducers left-to-right with full type inference at any arity. Type mismatches produce branded `PipeTypeError` messages indicating the position.
+
+```typescript
+const xform = pipe(
+  filter((x: number) => x > 2),
+  map((x: number) => x * 10),
+  take(3),
+);
+```
+
+### Execution
+
+#### `sequence<A, B>(xform: Transducer<A, B>, coll: Iterable<A>): B[]`
+Eagerly apply a transducer to a collection and return a new array. The most common way to execute a transducer.
+
+```typescript
+sequence(map((x: number) => x * 2), [1, 2, 3]);
+// => [2, 4, 6]
+```
+
+#### `into<A, B>(to: B[], xform: Transducer<A, B>, from: Iterable<A>): B[]`
+Transduce `from` into a target array. Returns the same array reference with elements appended.
+
+```typescript
+into([], map((x: number) => x * 2), [1, 2, 3]);
+// => [2, 4, 6]
+
+const result: number[] = [0];
+into(result, filter((x: number) => x > 2), [1, 2, 3, 4]);
+// result === [0, 3, 4]
+```
+
+#### `transduce<A, B, R>(xform: Transducer<A, B>, rf: Reducer<R, B>, init: R, coll: Iterable<A>): R`
+Apply a transducer with a custom reducing function and initial value. Use this when the result type is not an array.
+
+```typescript
+transduce(
+  filter((x: number) => x % 2 === 0),
+  (acc: number, x: number) => acc + x,
+  0,
+  [1, 2, 3, 4, 5, 6],
+);
+// => 12
+```
+
+#### `toFn<A, B>(xform: Transducer<A, B>): (coll: Iterable<A>) => B[]`
+Wrap a transducer into a data-last function. Useful as a pipeline stage in any left-to-right function composition utility.
+
+```typescript
+const doubles = toFn(map((x: number) => x * 2));
+doubles([1, 2, 3]);
+// => [2, 4, 6]
+
+const process = toFn(pipe(
+  filter((x: number) => x % 2 === 0),
+  map((x: number) => x * 10),
+  take(2),
+));
+process([1, 2, 3, 4, 5, 6]);
+// => [20, 40]
+```
+
+### Utilities
+
+#### `reduced<T>(value: T): Reduced<T>`
+Wrap a value in a `Reduced` sentinel to signal early termination.
+
+#### `isReduced<T>(x: T | Reduced<T>): x is Reduced<T>`
+Type guard: returns true if `x` is a `Reduced` sentinel value.
+
+## Subpath Imports
+
+Each function is available as a subpath import:
+
+```typescript
+import { map } from "@fromo/transducer-ts/map";
+import { filter } from "@fromo/transducer-ts/filter";
+import { pipe } from "@fromo/transducer-ts/pipe";
+import { sequence } from "@fromo/transducer-ts/sequence";
+import { toFn } from "@fromo/transducer-ts/toFn";
+```
+
+## Key Patterns
+
+**Transducer composition is left-to-right.** In `pipe(filter(pred), map(f), take(n))`, data flows through filter → map → take.
+
+**Early termination propagates.** When `take` has enough elements, upstream transducers stop receiving input.
+
+**Transducers are reusable.** A transducer value can be applied to multiple collections without rebuilding the pipeline.
+
+**Works with any Iterable.** Arrays, Sets, Maps, generators, and custom iterables all work as input to `sequence`, `into`, and `transduce`.
+
+## Integration with Other Libraries
+
+Ramda and Rambda use a different transducer protocol (`@@transducer/` objects) that is incompatible with transducer-ts's function-based `StepFn`. Use fully-applied ramda/rambda functions as callbacks inside transducer-ts transducers:
+
+```typescript
+// ✅ correct — R.add(1) is a plain function
+sequence(map(R.add(1)), [1, 2, 3]);
+
+// ❌ wrong — R.map returns a @@transducer/ object
+sequence(R.map(R.add(1)), [1, 2, 3]);
+```
+
+lodash, remeda, fp-ts, itertools, and underscore functions work as callbacks in `map` and `filter` without issues.
+
+## Optional
+
+- Source: [github.com/transducer-ts/transducer-ts](https://github.com/transducer-ts/transducer-ts)
+- License: Unlicense
+- Package: `@fromo/transducer-ts`

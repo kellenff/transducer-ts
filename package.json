@@ -22,7 +22,8 @@
     "node": ">=20"
   },
   "files": [
-    "dist"
+    "dist",
+    "llms.txt"
   ],
   "sideEffects": false,
   "exports": {
@@ -65,6 +66,10 @@
     "./sequence": {
       "types": "./dist/sequence/index.d.ts",
       "import": "./dist/sequence/index.js"
+    },
+    "./toFn": {
+      "types": "./dist/toFn/index.d.ts",
+      "import": "./dist/toFn/index.js"
     }
   },
   "scripts": {

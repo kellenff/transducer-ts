@@ -6,6 +6,7 @@
     "moduleResolution": "bundler",
     "esModuleInterop": true,
     "isolatedModules": true,
+    "isolatedDeclarations": true,
     "verbatimModuleSyntax": true,
     "declaration": true,
     "declarationMap": true,

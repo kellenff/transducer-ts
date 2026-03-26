@@ -8,3 +8,4 @@ export { pipe } from "./pipe/index.js";
 export { transduce } from "./transduce/index.js";
 export { into } from "./into/index.js";
 export { sequence } from "./sequence/index.js";
+export { toFn } from "./toFn/index.js";

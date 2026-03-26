@@ -4,16 +4,11 @@ This file is the explicit capability and coverage contract for the project.
 
 ## Active
 
-### R010 — A `toFn` function that wraps a `Transducer<A, B>` into `(coll: Iterable<A>) => B[]`
-- Class: core-capability
-- Status: deferred
-- Description: A `toFn` function that wraps a `Transducer<A, B>` into `(coll: Iterable<A>) => B[]` — a data-first curried API for use with any left-to-right function composition utility
-- Why it matters: Enables using transducer-ts transducers as data-last pipeline stages in data-first pipe utilities
-- Source: user
-- Primary owning slice: none
-- Supporting slices: none
-- Validation: unmapped
-- Notes: Deferred past M003. M003 focuses on integration examples, not new API surface.
+None — all requirements validated or deferred.
+
+## Deferred
+
+None — all requirements validated.
 
 ## Validated
 
@@ -116,6 +111,17 @@ This file is the explicit capability and coverage contract for the project.
 - Validation: M002 — yarn test:coverage reports 100% stmt/branch/func/line across all 9 source files
 - Notes: The runtime implementation doesn't change, so this should hold trivially
 
+### R010 — A `toFn` function that wraps a `Transducer<A, B>` into `(coll: Iterable<A>) => B[]`
+- Class: core-capability
+- Status: validated
+- Description: A `toFn` function that wraps a `Transducer<A, B>` into `(coll: Iterable<A>) => B[]` — a data-first curried API for use with any left-to-right function composition utility
+- Why it matters: Enables using transducer-ts transducers as data-last pipeline stages in data-first pipe utilities
+- Source: user
+- Primary owning slice: M005/S01
+- Supporting slices: none
+- Validation: M005 — toFn exported, 12 tests pass (9 runtime + 3 type-level), 100% coverage, type inference verified
+- Notes: Implementation delegates to sequence; one-liner.
+
 ### R011 — Examples directory with per-library test files, all passing vitest
 - Class: primary-user-loop
 - Status: validated
@@ -182,6 +188,72 @@ This file is the explicit capability and coverage contract for the project.
 - Validation: M003 — all 7 files present: lodash (17 tests), ramda (14), rambda (10), remeda (13), fp-ts (11), itertools (12), underscore (14); yarn test 162/162 pass
 - Notes: lodash/ramda/rambda/remeda in S01; fp-ts/itertools/underscore in S02
 
+### R017 — `isolatedDeclarations: true` enabled in tsconfig
+- Class: quality-attribute
+- Status: validated
+- Description: `isolatedDeclarations: true` set in `tsconfig.base.json`, inherited by all module tsconfigs, with zero typecheck violations
+- Why it matters: Enables faster DTS emit by alternative toolchains (Oxc, SWC, esbuild) and signals modern TS rigor to consumers
+- Source: user
+- Primary owning slice: M004/S01
+- Supporting slices: none
+- Validation: M004 — `isolatedDeclarations: true` in tsconfig.base.json; `yarn typecheck` exits 0; DTS output byte-identical
+- Notes: All exports have explicit return types.
+
+### R018 — `llms.txt` at repo root, included in npm package
+- Class: primary-user-loop
+- Status: validated
+- Description: An `llms.txt` file at the repo root following the llmstxt.org spec, covering the full API surface, types, key patterns, and integration gotchas. Included in the npm package via the `files` array.
+- Why it matters: AI coding assistants actively use llms.txt when encountering a new library — a clean, curated index beats parsing raw source
+- Source: user
+- Primary owning slice: M004/S02
+- Supporting slices: none
+- Validation: M004 — llms.txt at repo root; `yarn pack --dry-run` lists it in tarball
+- Notes: File lives at root and ships in the npm tarball
+
+### R019 — `AGENTS.md` — concise, non-inferable codebase context
+- Class: primary-user-loop
+- Status: validated
+- Description: An `AGENTS.md` at repo root providing AI coding agents with non-inferable project context: Yarn 4 PnP setup, project references architecture, `pipe`'s `BuildConstraint` type system, `.js` extension import convention, and key gotchas
+- Why it matters: Agents supported by the Agentic AI Foundation standard (Claude Code, Cursor, Copilot, Gemini CLI, Codex, etc.) read this file automatically
+- Source: user
+- Primary owning slice: M004/S02
+- Supporting slices: none
+- Validation: M004 — AGENTS.md at repo root with non-inferable context covering setup, build, architecture, type system, testing, gotchas
+- Notes: Concise, focused on non-inferable details only
+
+### R020 — `CLAUDE.md` updated with library-consumer section
+- Class: quality-attribute
+- Status: validated
+- Description: `CLAUDE.md` updated to include a library-usage section (consumer angle) and pointer to `AGENTS.md` for shared contributor context
+- Why it matters: Claude Code reads this file at session start — the library-usage section helps agents consuming transducer-ts as a dependency
+- Source: inferred
+- Primary owning slice: M004/S02
+- Supporting slices: none
+- Validation: M004 — CLAUDE.md has consumer section with import example, key points, llms.txt pointer, and contributing section pointing to AGENTS.md
+- Notes: GSD-injected sections preserved; library section added above them
+
+### R021 — `yarn check` and `yarn build` pass after all changes
+- Class: quality-attribute
+- Status: validated
+- Description: `yarn check` (typecheck + lint + fmt:check) and `yarn build` both exit 0 after all M004 changes
+- Why it matters: CI gate — the project must stay clean after any change
+- Source: inferred
+- Primary owning slice: M004/S01
+- Supporting slices: M004/S02
+- Validation: M004 — yarn check and yarn build both exit 0 after both slices
+- Notes: none
+
+### R022 — No stale facts in any agent-facing file
+- Class: quality-attribute
+- Status: validated
+- Description: No references to rambda as peer dependency, tsup as build tool, 5-arity pipe cap, or other superseded facts in `llms.txt`, `AGENTS.md`, or `CLAUDE.md`
+- Why it matters: Stale context actively misleads agents — worse than no context
+- Source: inferred
+- Primary owning slice: M004/S02
+- Supporting slices: none
+- Validation: M004 — grep for tsup, rambda peer dep, 5-arity finds nothing in any agent-facing file
+- Notes: Key facts that changed: rambda removed as dep (built-in pipe), tsup replaced by tsc project references, pipe now supports N-arity
+
 ## Traceability
 
 | ID | Class | Status | Primary owner | Supporting | Proof |
@@ -195,17 +267,24 @@ This file is the explicit capability and coverage contract for the project.
 | R007 | core-capability | validated | M002/S02 | none | M002/S02 — 7 new type-level tests: 3 positive (6, 10, 15 arity) and 4 mismatch (positions 1, 3, 5, 9) all pass |
 | R008 | quality-attribute | validated | M002/S02 | none | M002 — yarn check exits 0: typecheck clean, oxlint 0 warnings 0 errors, oxfmt all files correct |
 | R009 | quality-attribute | validated | M002/S02 | none | M002 — yarn test:coverage reports 100% stmt/branch/func/line across all 9 source files |
-| R010 | core-capability | deferred | none | none | unmapped |
+| R010 | core-capability | validated | M005/S01 | none | M005 — toFn exported, 12 tests pass, type inference verified, 100% coverage |
 | R011 | primary-user-loop | validated | M003/S01 | M003/S02 | M003 — 7 example files; yarn test 162/162 pass including all 91 example assertions |
 | R012 | quality-attribute | validated | M003/S01 | M003/S02 | M003 — yarn test 162/162 pass; all 7 example files contain substantive expect() assertions |
 | R013 | quality-attribute | validated | M003/S01 | M003/S02 | M003 — yarn typecheck exits 0 with examples/ covered under strict+exactOptionalPropertyTypes |
 | R014 | differentiator | validated | M003/S01 | none | M003 — ramda.test.ts and rambda.test.ts each have 18-line @@transducer/ protocol incompatibility comment blocks |
 | R015 | launchability | validated | M003/S01 | none | M003 — vitest.config.ts and tsconfig.test.json both extended; yarn test runs 7 example files; coverage scope unchanged |
 | R016 | core-capability | validated | M003/S01 | M003/S02 | M003 — all 7 files present with dedicated tests; yarn test 162/162 pass |
+| R017 | quality-attribute | validated | M004/S01 | none | M004 — `isolatedDeclarations: true` in tsconfig.base.json; `yarn typecheck` exits 0; DTS output byte-identical |
+| R018 | primary-user-loop | validated | M004/S02 | none | M004 — llms.txt at repo root; `yarn pack --dry-run` lists it in tarball |
+| R019 | primary-user-loop | validated | M004/S02 | none | M004 — AGENTS.md at repo root with non-inferable context |
+| R020 | quality-attribute | validated | M004/S02 | none | M004 — CLAUDE.md has consumer section + AGENTS.md pointer |
+| R021 | quality-attribute | validated | M004/S01 | M004/S02 | M004 — yarn check and yarn build both exit 0 |
+| R022 | quality-attribute | validated | M004/S02 | none | M004 — grep for stale facts finds nothing |
 
 ## Coverage Summary
 
 - Active requirements: 0
-- Validated: 15 (R001–R009, R011–R016)
-- Deferred: 1 (R010)
+- Mapped to slices: 0
+- Validated: 22 (R001–R022)
+- Deferred: 0
 - Unmapped active requirements: 0

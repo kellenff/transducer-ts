@@ -29,6 +29,7 @@ types ← map, filter, take, drop, pipe
 types ← transduce
 types, transduce ← into
 types, into ← sequence
+types, sequence ← toFn
 ```
 
 `src/index.ts` is the barrel re-export.
@@ -49,6 +50,37 @@ types, into ← sequence
 - 2-space indent, LF line endings, UTF-8 (`.editorconfig`)
 - No runtime dependencies — `pipe` is built-in, no peer deps required
 - Imports use `.js` extensions in source (`from "../types/index.js"`) — tsc resolves `.ts` sources via `allowImportingTsExtensions`
+
+## Using transducer-ts as a Dependency
+
+If you're working in a project that consumes this library:
+
+```typescript
+import { pipe, map, filter, take, sequence } from "@fromo/transducer-ts";
+
+const xform = pipe(
+  filter((x: number) => x % 2 === 0),
+  map((x: number) => x * 10),
+  take(3),
+);
+
+sequence(xform, [1, 2, 3, 4, 5, 6, 7, 8]);
+// => [20, 40, 60]
+```
+
+**Key points for consumers:**
+- `pipe` composes transducers left-to-right with full type inference at any arity
+- `sequence(xform, coll)` is the simplest way to execute — returns a new array
+- `into(target, xform, coll)` appends to an existing array
+- `transduce(xform, reducer, init, coll)` for custom reduction (non-array results)
+- Works with any `Iterable` — arrays, Sets, generators, etc.
+- `filter` does not narrow types — it preserves the input type `A`
+- Ramda/Rambda `@@transducer/` protocol is incompatible — use their functions as callbacks to `map`/`filter`
+- See `llms.txt` for full API reference
+
+## Contributing
+
+See `AGENTS.md` for non-inferable codebase context (Yarn PnP setup, project references, type system details, gotchas).
 
 <!-- GSD:project-start source:PROJECT.md -->
 ## Project

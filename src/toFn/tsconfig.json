@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": ".",
+    "outDir": "../../dist/toFn"
+  },
+  "include": ["./**/*.ts"],
+  "references": [
+    {
+      "path": "../types"
+    },
+    {
+      "path": "../sequence"
+    }
+  ],
+  "exclude": ["./**/*.test.ts", "./**/*.test-d.ts"]
+}
