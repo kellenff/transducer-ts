@@ -202,6 +202,52 @@ transduce(
 // => 12
 ```
 
+**Single-pass running stats over a numeric stream**
+
+```typescript
+import { pipe, filter, map, transduce } from "@fromo/transducer-ts";
+
+interface Stats {
+  count: number;
+  sum: number;
+  sumSq: number;
+  min: number;
+  max: number;
+}
+
+const EMPTY: Stats = {
+  count: 0,
+  sum: 0,
+  sumSq: 0,
+  min: Infinity,
+  max: -Infinity,
+};
+
+function step(acc: Stats, value: number): Stats {
+  return {
+    count: acc.count + 1,
+    sum: acc.sum + value,
+    sumSq: acc.sumSq + value * value,
+    min: Math.min(acc.min, value),
+    max: Math.max(acc.max, value),
+  };
+}
+
+const stats = transduce(
+  pipe(
+    filter((x: number) => x > 0),
+    map((x: number) => x),
+  ),
+  step,
+  EMPTY,
+  [1.2, 3.4, -0.1, 5.6, 2.3],
+);
+
+const avg = stats.sum / stats.count;
+const variance = stats.sumSq / stats.count - avg * avg;
+const stdDev = Math.sqrt(variance);
+```
+
 Also accepts `StepFn<R, B>` reducers that may return `Reduced<R>`.
 
 #### `toFn<A, B>(xform: Transducer<A, B>): (coll: Iterable<A>) => B[]`
