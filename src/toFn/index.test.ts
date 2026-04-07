@@ -29,7 +29,7 @@ describe("toFn", () => {
   });
 
   it("handles early termination via take", () => {
-    const firstTwo = toFn(take<number>(2));
+    const firstTwo = toFn(take(2));
     expect(firstTwo([1, 2, 3, 4, 5])).toEqual([1, 2]);
   });
 
@@ -39,12 +39,12 @@ describe("toFn", () => {
   });
 
   it("handles take(0)", () => {
-    const none = toFn(take<number>(0));
+    const none = toFn(take(0));
     expect(none([1, 2, 3])).toEqual([]);
   });
 
   it("works with drop", () => {
-    const skipTwo = toFn(drop<number>(2));
+    const skipTwo = toFn(drop(2));
     expect(skipTwo([1, 2, 3, 4, 5])).toEqual([3, 4, 5]);
   });
 

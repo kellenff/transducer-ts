@@ -44,7 +44,7 @@ describe("transduce", () => {
   it("terminates early via Reduced — take stops iteration", () => {
     let callCount = 0;
     const result = transduce(
-      take<number>(2),
+      take(2),
       (acc: number[], x: number) => {
         callCount++;
         acc.push(x);
@@ -59,7 +59,7 @@ describe("transduce", () => {
 
   it("unwraps Reduced value correctly at loop end", () => {
     // take(n) exactly at collection boundary: last element triggers Reduced
-    const result = transduce(take<number>(3), pushReducer, [] as number[], [10, 20, 30]);
+    const result = transduce(take(3), pushReducer, [] as number[], [10, 20, 30]);
     expect(result).toEqual([10, 20, 30]);
   });
 
@@ -127,7 +127,7 @@ describe("transduce", () => {
       }
     }
 
-    const result = transduce(take<number>(2), pushReducer, [] as number[], source());
+    const result = transduce(take(2), pushReducer, [] as number[], source());
     expect(result).toEqual([1, 2]);
     expect(finalized).toBe(true);
   });

@@ -1,4 +1,4 @@
-import type { Transducer } from "../types/index.js";
+import type { PreservingTransducer, Transducer } from "../types/index.js";
 import { sequence } from "../sequence/index.js";
 
 /**
@@ -22,6 +22,8 @@ import { sequence } from "../sequence/index.js";
  * processNumbers([1, 2, 3, 4, 5, 6]);
  * // => [20, 40]
  */
-export function toFn<A, B>(xform: Transducer<A, B>): (coll: Iterable<A>) => B[] {
-  return (coll: Iterable<A>): B[] => sequence(xform, coll);
+export function toFn(xform: PreservingTransducer): (coll: Iterable<unknown>) => unknown[];
+export function toFn<A, B>(xform: Transducer<A, B>): (coll: Iterable<A>) => B[];
+export function toFn(xform: Transducer<any, any>): (coll: Iterable<any>) => any[] {
+  return (coll: Iterable<any>): any[] => sequence(xform, coll);
 }

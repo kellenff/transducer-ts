@@ -11,7 +11,7 @@
       "path": "../types"
     },
     {
-      "path": "../into"
+      "path": "../transduce"
     }
   ],
   "exclude": ["./**/*.test.ts", "./**/*.test-d.ts"]

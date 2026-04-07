@@ -1,4 +1,4 @@
-export type { Reducer, StepFn, Transducer, Reduced } from "./types/index.js";
+export type { Reducer, StepFn, Transducer, Reduced, PreservingTransducer } from "./types/index.js";
 export { reduced, isReduced } from "./types/index.js";
 export { map } from "./map/index.js";
 export { filter } from "./filter/index.js";
