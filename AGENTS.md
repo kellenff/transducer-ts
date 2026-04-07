@@ -28,7 +28,7 @@ types, sequence ← toFn
 
 ## Type System
 
-**`pipe` uses `BuildConstraint`** — a mapped tuple type that validates adjacent transducer compatibility at compile time. It lives in `src/pipe/index.ts` as a non-exported type. If modifying `pipe`'s types, understand `BuildConstraint`, `PipeResult`, `PipeTypeError`, and the `PrevIdx` lookup tuple pattern (documented in `.gsd/KNOWLEDGE.md`).
+**`pipe` uses chained overloads** — up to 21 transducers with generics `A→B→C→…` so TypeScript can infer later callbacks from earlier outputs. There is no `BuildConstraint` / `PipeTypeError`; mismatches surface as standard overload errors. Implementation: `src/pipe/index.ts`.
 
 **Strict mode flags that affect code style:**
 
@@ -48,7 +48,8 @@ types, sequence ← toFn
 - `filter()` does not narrow types — it preserves the input element type `A` even with a type guard predicate. Use `filterGuard()` for narrowing pipelines.
 - `pipe`'s `const T` inference requires inline transducer literals. Spreading a pre-typed array loses constraint checking.
 - Ramda/Rambda's `@@transducer/` protocol is incompatible with this library's function-based `StepFn`. Use their fully-applied functions as callbacks to `map`/`filter`, not as transducers.
-- `pipe` enforces strict compatibility checks up to 21 transducers. Longer chains emit a compile-time `PipeTypeError`.
+- `pipe` overloads cover up to 21 transducers. Longer chains rely on the implementation signature only (weaker typing).
+- `take` / `drop` return a branded `PreservingTransducer` (dual-callable on iterables). They are not plain `Transducer<A, A>` at the type level.
 
 ## Commands
 

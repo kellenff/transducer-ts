@@ -1,5 +1,5 @@
 import type { Transducer } from "../types/index.js";
-import { into } from "../into/index.js";
+import { transduce } from "../transduce/index.js";
 
 /**
  * Eagerly apply a transducer to a collection and return a new array.
@@ -22,6 +22,16 @@ import { into } from "../into/index.js";
  * sequence(xform, [1, 2, 3, 4, 5, 6]);
  * // => [6, 12]
  */
-export function sequence<A, B>(xform: Transducer<A, B>, coll: Iterable<A>): B[] {
-  return into([], xform, coll);
+export function sequence<A, B>(xform: Transducer<A, B>, coll: Iterable<A>): B[];
+export function sequence(xform: Transducer<any, any>, coll: Iterable<any>): any[] {
+  const out: any[] = [];
+  return transduce(
+    xform,
+    (acc: any[], x: any) => {
+      acc.push(x);
+      return acc;
+    },
+    out,
+    coll,
+  );
 }

@@ -61,4 +61,41 @@ describe("drop", () => {
   it("works with into", () => {
     expect(into([], drop(2), [10, 20, 30, 40])).toEqual([30, 40]);
   });
+
+  describe("standalone callable", () => {
+    it("drops first n from array", () => {
+      expect(drop(2)([1, 2, 3, 4, 5])).toEqual([3, 4, 5]);
+    });
+
+    it("drops from Set (any Iterable)", () => {
+      const result = drop(1)(new Set([10, 20, 30]));
+      expect(result).toEqual([20, 30]);
+    });
+
+    it("drops from generator", () => {
+      function* nums(): Generator<number> {
+        yield 1;
+        yield 2;
+        yield 3;
+        yield 4;
+      }
+      expect(drop(2)(nums())).toEqual([3, 4]);
+    });
+
+    it("n > length returns empty", () => {
+      expect(drop(10)([1, 2])).toEqual([]);
+    });
+
+    it("n = 0 returns all elements", () => {
+      expect(drop(0)([1, 2, 3])).toEqual([1, 2, 3]);
+    });
+
+    it("negative n returns all elements", () => {
+      expect(drop(-5)([1, 2, 3])).toEqual([1, 2, 3]);
+    });
+
+    it("empty collection returns empty", () => {
+      expect(drop(3)([])).toEqual([]);
+    });
+  });
 });

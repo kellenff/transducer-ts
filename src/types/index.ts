@@ -25,6 +25,24 @@ export type StepFn<R, A> = (acc: R, input: A) => R | Reduced<R>;
 export type Transducer<A, B> = <R>(rf: StepFn<R, B>) => StepFn<R, A>;
 
 /**
+ * Runtime brand key — only `take` / `drop` set this property. Plain `Transducer<A, A>` from
+ * `filter` does not, so overloads like `sequence` can discriminate preserving transducers.
+ */
+export const preservingTransducerKey = "__transducerTsPreserving" as const;
+
+/**
+ * A transducer that preserves the element type — dual-callable on iterables (`take`, `drop`).
+ * Branded so `Transducer<A, A>` from `filter` is not mistaken for preserving in overload resolution.
+ */
+export interface PreservingTransducer {
+  readonly [preservingTransducerKey]: true;
+  /** Standalone: directly callable on iterables. */
+  <T>(coll: Iterable<T>): readonly T[];
+  /** Transducer: transforms a reducing function. */
+  <R, A>(rf: StepFn<R, A>): StepFn<R, A>;
+}
+
+/**
  * Sentinel value wrapping a result to signal early termination.
  * Created by `reduced()`, checked by `isReduced()`.
  */

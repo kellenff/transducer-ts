@@ -102,7 +102,7 @@ describe("edge case matrix", () => {
 
   it("negative n in drop within composition passes all through", () => {
     const xf = pipe(
-      drop<number>(-5),
+      drop(-5),
       map((x: number) => x * 2),
     );
     expect(sequence(xf, [1, 2, 3])).toEqual([2, 4, 6]);

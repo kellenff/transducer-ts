@@ -1,4 +1,4 @@
-import type { Reducer, StepFn, Transducer } from "../types/index.js";
+import type { PreservingTransducer, Reducer, StepFn, Transducer } from "../types/index.js";
 import { isReduced } from "../types/index.js";
 
 /**
@@ -27,24 +27,36 @@ export function transduce<A, B, R>(
   init: R,
   coll: Iterable<A>,
 ): R;
-
-/**
- * Apply a transducer to a collection with a step function and initial value.
- * Use this overload when your reducing function may return a Reduced sentinel.
- */
 export function transduce<A, B, R>(
   xform: Transducer<A, B>,
   rf: StepFn<R, B>,
   init: R,
   coll: Iterable<A>,
 ): R;
-export function transduce<A, B, R>(
-  xform: Transducer<A, B>,
-  rf: Reducer<R, B> | StepFn<R, B>,
+export function transduce<A, R>(
+  xform: PreservingTransducer,
+  rf: Reducer<R, A>,
   init: R,
   coll: Iterable<A>,
-): R {
-  return transduceStep(xform, rf, init, coll);
+): R;
+
+/**
+ * Apply a transducer to a collection with a step function and initial value.
+ * Use this overload when your reducing function may return a Reduced sentinel.
+ */
+export function transduce<A, R>(
+  xform: PreservingTransducer,
+  rf: StepFn<R, A>,
+  init: R,
+  coll: Iterable<A>,
+): R;
+export function transduce(
+  xform: Transducer<any, any> | PreservingTransducer,
+  rf: Reducer<any, any> | StepFn<any, any>,
+  init: any,
+  coll: Iterable<any>,
+): any {
+  return transduceStep(xform as Transducer<any, any>, rf, init, coll);
 }
 
 function transduceStep<A, B, R>(

@@ -20,10 +20,11 @@ import { transduce } from "../transduce/index.js";
  * into(result, filter((x: number) => x > 2), [1, 2, 3, 4]);
  * // result === [0, 3, 4]
  */
-export function into<A, B>(to: B[], xform: Transducer<A, B>, from: Iterable<A>): B[] {
+export function into<A, B>(to: B[], xform: Transducer<A, B>, from: Iterable<A>): B[];
+export function into(to: any[], xform: Transducer<any, any>, from: Iterable<any>): any[] {
   return transduce(
     xform,
-    (acc: B[], x: B) => {
+    (acc: any[], x: any) => {
       acc.push(x);
       return acc;
     },

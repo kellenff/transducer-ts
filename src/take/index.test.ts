@@ -52,7 +52,7 @@ describe("take", () => {
 
   it("terminates early — does not process elements beyond n", () => {
     let callCount = 0;
-    const counting = take<number>(2);
+    const counting = take(2);
     // Wrap in transduce with a counting reducer to verify early exit
     const result = transduce(
       counting,
@@ -78,11 +78,48 @@ describe("take", () => {
     // pipe(take(2), take(2)) — inner take(2) signals Reduced on 2nd element
     // outer take(2) also hits limit at 2nd element
     // This exercises the isReduced(result) ? result : reduced(result) branch
-    const xf = pipe(take<number>(2), take<number>(2));
+    const xf = pipe(take(2), take(2));
     expect(sequence(xf, [1, 2, 3, 4])).toEqual([1, 2]);
   });
 
   it("works with into", () => {
     expect(into([], take(3), [10, 20, 30, 40, 50])).toEqual([10, 20, 30]);
+  });
+
+  describe("standalone callable", () => {
+    it("takes first n from array", () => {
+      expect(take(3)([1, 2, 3, 4, 5])).toEqual([1, 2, 3]);
+    });
+
+    it("takes from Set (any Iterable)", () => {
+      const result = take(2)(new Set([10, 20, 30]));
+      expect(result).toEqual([10, 20]);
+    });
+
+    it("takes from generator", () => {
+      function* nums(): Generator<number> {
+        yield 1;
+        yield 2;
+        yield 3;
+        yield 4;
+      }
+      expect(take(2)(nums())).toEqual([1, 2]);
+    });
+
+    it("n > length returns all elements", () => {
+      expect(take(10)([1, 2])).toEqual([1, 2]);
+    });
+
+    it("n = 0 returns empty", () => {
+      expect(take(0)([1, 2, 3])).toEqual([]);
+    });
+
+    it("negative n returns empty", () => {
+      expect(take(-5)([1, 2, 3])).toEqual([]);
+    });
+
+    it("empty collection returns empty", () => {
+      expect(take(3)([])).toEqual([]);
+    });
   });
 });

@@ -1,94 +1,5 @@
 import type { Transducer } from "../types/index.js";
 
-type PipeTypeError<Msg extends string> = {
-  readonly __brand: "PipeTypeError";
-  readonly message: Msg;
-};
-
-type TransducerInput<T> = T extends Transducer<infer A, any> ? A : never;
-type TransducerOutput<T> = T extends Transducer<any, infer B> ? B : never;
-
-// Maps numeric index I to its predecessor I-1; PrevIdx<0> = never (no predecessor).
-type PrevIdx<I extends number> = [
-  never,
-  0,
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9,
-  10,
-  11,
-  12,
-  13,
-  14,
-  15,
-  16,
-  17,
-  18,
-  19,
-][I];
-
-// For each tuple position K > 0, checks that the previous transducer's output type
-// matches the current transducer's input type. Returns a branded PipeTypeError on mismatch.
-type BuildConstraint<T extends readonly Transducer<any, any>[]> = {
-  [K in keyof T]: K extends `${infer I extends number}`
-    ? K extends "0"
-      ? T[K]
-      : PrevIdx<I> extends keyof T
-        ? TransducerOutput<T[PrevIdx<I>]> extends TransducerInput<T[K]>
-          ? T[K]
-          : PipeTypeError<`Argument at position ${K}: output of previous transducer does not match input of this transducer`>
-        : T[K]
-    : T[K];
-};
-
-type MaxCheckedArity = 21;
-type SupportedPipeLengths =
-  | 0
-  | 1
-  | 2
-  | 3
-  | 4
-  | 5
-  | 6
-  | 7
-  | 8
-  | 9
-  | 10
-  | 11
-  | 12
-  | 13
-  | 14
-  | 15
-  | 16
-  | 17
-  | 18
-  | 19
-  | 20
-  | 21;
-type EnforceMaxArity<T extends readonly Transducer<any, any>[]> = number extends T["length"]
-  ? T
-  : T["length"] extends SupportedPipeLengths
-    ? T
-    : readonly [
-        PipeTypeError<`pipe currently supports up to ${MaxCheckedArity} transducers for strict compatibility checks`>,
-      ];
-
-type LastOf<T extends readonly any[]> = T extends readonly [...any[], infer L] ? L : never;
-
-// Extracts Transducer<InputOfFirst, OutputOfLast> from a validated tuple.
-type PipeResult<T extends readonly Transducer<any, any>[]> = T extends readonly [
-  Transducer<infer A, any>,
-  ...any[],
-]
-  ? Transducer<A, TransducerOutput<LastOf<T>>>
-  : never;
-
 /**
  * Compose transducers left-to-right with full type inference at any arity.
  *
@@ -103,9 +14,278 @@ type PipeResult<T extends readonly Transducer<any, any>[]> = T extends readonly 
  * sequence(xform, [1, 2, 3, 4, 5, 6]);
  * // => [30, 40, 50]
  */
-export function pipe<const T extends readonly Transducer<any, any>[]>(
-  ...xforms: EnforceMaxArity<BuildConstraint<T> extends T ? T : BuildConstraint<T>>
-): PipeResult<T>;
+
+// 21 overloads: each chains generic parameters so TypeScript infers forward.
+// Type params A through W represent the 22 type positions for up to 21 transducers.
+
+export function pipe<A, B>(t1: Transducer<A, B>): Transducer<A, B>;
+export function pipe<A, B, C>(t1: Transducer<A, B>, t2: Transducer<B, C>): Transducer<A, C>;
+export function pipe<A, B, C, D>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+): Transducer<A, D>;
+export function pipe<A, B, C, D, E>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+  t4: Transducer<D, E>,
+): Transducer<A, E>;
+export function pipe<A, B, C, D, E, F>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+  t4: Transducer<D, E>,
+  t5: Transducer<E, F>,
+): Transducer<A, F>;
+export function pipe<A, B, C, D, E, F, G>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+  t4: Transducer<D, E>,
+  t5: Transducer<E, F>,
+  t6: Transducer<F, G>,
+): Transducer<A, G>;
+export function pipe<A, B, C, D, E, F, G, H>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+  t4: Transducer<D, E>,
+  t5: Transducer<E, F>,
+  t6: Transducer<F, G>,
+  t7: Transducer<G, H>,
+): Transducer<A, H>;
+export function pipe<A, B, C, D, E, F, G, H, I>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+  t4: Transducer<D, E>,
+  t5: Transducer<E, F>,
+  t6: Transducer<F, G>,
+  t7: Transducer<G, H>,
+  t8: Transducer<H, I>,
+): Transducer<A, I>;
+export function pipe<A, B, C, D, E, F, G, H, I, J>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+  t4: Transducer<D, E>,
+  t5: Transducer<E, F>,
+  t6: Transducer<F, G>,
+  t7: Transducer<G, H>,
+  t8: Transducer<H, I>,
+  t9: Transducer<I, J>,
+): Transducer<A, J>;
+export function pipe<A, B, C, D, E, F, G, H, I, J, K>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+  t4: Transducer<D, E>,
+  t5: Transducer<E, F>,
+  t6: Transducer<F, G>,
+  t7: Transducer<G, H>,
+  t8: Transducer<H, I>,
+  t9: Transducer<I, J>,
+  t10: Transducer<J, K>,
+): Transducer<A, K>;
+export function pipe<A, B, C, D, E, F, G, H, I, J, K, L>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+  t4: Transducer<D, E>,
+  t5: Transducer<E, F>,
+  t6: Transducer<F, G>,
+  t7: Transducer<G, H>,
+  t8: Transducer<H, I>,
+  t9: Transducer<I, J>,
+  t10: Transducer<J, K>,
+  t11: Transducer<K, L>,
+): Transducer<A, L>;
+export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+  t4: Transducer<D, E>,
+  t5: Transducer<E, F>,
+  t6: Transducer<F, G>,
+  t7: Transducer<G, H>,
+  t8: Transducer<H, I>,
+  t9: Transducer<I, J>,
+  t10: Transducer<J, K>,
+  t11: Transducer<K, L>,
+  t12: Transducer<L, M>,
+): Transducer<A, M>;
+export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+  t4: Transducer<D, E>,
+  t5: Transducer<E, F>,
+  t6: Transducer<F, G>,
+  t7: Transducer<G, H>,
+  t8: Transducer<H, I>,
+  t9: Transducer<I, J>,
+  t10: Transducer<J, K>,
+  t11: Transducer<K, L>,
+  t12: Transducer<L, M>,
+  t13: Transducer<M, N>,
+): Transducer<A, N>;
+export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+  t4: Transducer<D, E>,
+  t5: Transducer<E, F>,
+  t6: Transducer<F, G>,
+  t7: Transducer<G, H>,
+  t8: Transducer<H, I>,
+  t9: Transducer<I, J>,
+  t10: Transducer<J, K>,
+  t11: Transducer<K, L>,
+  t12: Transducer<L, M>,
+  t13: Transducer<M, N>,
+  t14: Transducer<N, O>,
+): Transducer<A, O>;
+export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+  t4: Transducer<D, E>,
+  t5: Transducer<E, F>,
+  t6: Transducer<F, G>,
+  t7: Transducer<G, H>,
+  t8: Transducer<H, I>,
+  t9: Transducer<I, J>,
+  t10: Transducer<J, K>,
+  t11: Transducer<K, L>,
+  t12: Transducer<L, M>,
+  t13: Transducer<M, N>,
+  t14: Transducer<N, O>,
+  t15: Transducer<O, P>,
+): Transducer<A, P>;
+export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+  t4: Transducer<D, E>,
+  t5: Transducer<E, F>,
+  t6: Transducer<F, G>,
+  t7: Transducer<G, H>,
+  t8: Transducer<H, I>,
+  t9: Transducer<I, J>,
+  t10: Transducer<J, K>,
+  t11: Transducer<K, L>,
+  t12: Transducer<L, M>,
+  t13: Transducer<M, N>,
+  t14: Transducer<N, O>,
+  t15: Transducer<O, P>,
+  t16: Transducer<P, Q>,
+): Transducer<A, Q>;
+export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, S>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+  t4: Transducer<D, E>,
+  t5: Transducer<E, F>,
+  t6: Transducer<F, G>,
+  t7: Transducer<G, H>,
+  t8: Transducer<H, I>,
+  t9: Transducer<I, J>,
+  t10: Transducer<J, K>,
+  t11: Transducer<K, L>,
+  t12: Transducer<L, M>,
+  t13: Transducer<M, N>,
+  t14: Transducer<N, O>,
+  t15: Transducer<O, P>,
+  t16: Transducer<P, Q>,
+  t17: Transducer<Q, S>,
+): Transducer<A, S>;
+export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, S, T>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+  t4: Transducer<D, E>,
+  t5: Transducer<E, F>,
+  t6: Transducer<F, G>,
+  t7: Transducer<G, H>,
+  t8: Transducer<H, I>,
+  t9: Transducer<I, J>,
+  t10: Transducer<J, K>,
+  t11: Transducer<K, L>,
+  t12: Transducer<L, M>,
+  t13: Transducer<M, N>,
+  t14: Transducer<N, O>,
+  t15: Transducer<O, P>,
+  t16: Transducer<P, Q>,
+  t17: Transducer<Q, S>,
+  t18: Transducer<S, T>,
+): Transducer<A, T>;
+export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, S, T, U>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+  t4: Transducer<D, E>,
+  t5: Transducer<E, F>,
+  t6: Transducer<F, G>,
+  t7: Transducer<G, H>,
+  t8: Transducer<H, I>,
+  t9: Transducer<I, J>,
+  t10: Transducer<J, K>,
+  t11: Transducer<K, L>,
+  t12: Transducer<L, M>,
+  t13: Transducer<M, N>,
+  t14: Transducer<N, O>,
+  t15: Transducer<O, P>,
+  t16: Transducer<P, Q>,
+  t17: Transducer<Q, S>,
+  t18: Transducer<S, T>,
+  t19: Transducer<T, U>,
+): Transducer<A, U>;
+export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, S, T, U, V>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+  t4: Transducer<D, E>,
+  t5: Transducer<E, F>,
+  t6: Transducer<F, G>,
+  t7: Transducer<G, H>,
+  t8: Transducer<H, I>,
+  t9: Transducer<I, J>,
+  t10: Transducer<J, K>,
+  t11: Transducer<K, L>,
+  t12: Transducer<L, M>,
+  t13: Transducer<M, N>,
+  t14: Transducer<N, O>,
+  t15: Transducer<O, P>,
+  t16: Transducer<P, Q>,
+  t17: Transducer<Q, S>,
+  t18: Transducer<S, T>,
+  t19: Transducer<T, U>,
+  t20: Transducer<U, V>,
+): Transducer<A, V>;
+export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, S, T, U, V, W>(
+  t1: Transducer<A, B>,
+  t2: Transducer<B, C>,
+  t3: Transducer<C, D>,
+  t4: Transducer<D, E>,
+  t5: Transducer<E, F>,
+  t6: Transducer<F, G>,
+  t7: Transducer<G, H>,
+  t8: Transducer<H, I>,
+  t9: Transducer<I, J>,
+  t10: Transducer<J, K>,
+  t11: Transducer<K, L>,
+  t12: Transducer<L, M>,
+  t13: Transducer<M, N>,
+  t14: Transducer<N, O>,
+  t15: Transducer<O, P>,
+  t16: Transducer<P, Q>,
+  t17: Transducer<Q, S>,
+  t18: Transducer<S, T>,
+  t19: Transducer<T, U>,
+  t20: Transducer<U, V>,
+  t21: Transducer<V, W>,
+): Transducer<A, W>;
 export function pipe(...xforms: Transducer<any, any>[]): Transducer<any, any> {
   return (rf) => xforms.reduceRight((acc, xf) => xf(acc), rf);
 }
