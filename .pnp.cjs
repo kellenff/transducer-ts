@@ -37,7 +37,7 @@ const RAW_RUNTIME_STATE =
           ["husky", "npm:9.1.7"],\
           ["itertools", "npm:2.6.0"],\
           ["lint-staged", "npm:16.4.0"],\
-          ["lodash", "npm:4.17.23"],\
+          ["lodash", "npm:4.18.1"],\
           ["oxfmt", "npm:0.41.0"],\
           ["oxlint", "virtual:29be690d0d965ecf4c1cd38e52d2480fda5c1ad080ffc2eb1a1f90f94bd8e863ae91e1d41c1e1253489322c493fa4b6e1e3447076215965576d8eaa9fd8b9e71#npm:1.56.0"],\
           ["rambda", "npm:11.1.0"],\
@@ -143,7 +143,7 @@ const RAW_RUNTIME_STATE =
           ["husky", "npm:9.1.7"],\
           ["itertools", "npm:2.6.0"],\
           ["lint-staged", "npm:16.4.0"],\
-          ["lodash", "npm:4.17.23"],\
+          ["lodash", "npm:4.18.1"],\
           ["oxfmt", "npm:0.41.0"],\
           ["oxlint", "virtual:29be690d0d965ecf4c1cd38e52d2480fda5c1ad080ffc2eb1a1f90f94bd8e863ae91e1d41c1e1253489322c493fa4b6e1e3447076215965576d8eaa9fd8b9e71#npm:1.56.0"],\
           ["rambda", "npm:11.1.0"],\
@@ -1611,10 +1611,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["lodash", [\
-      ["npm:4.17.23", {\
-        "packageLocation": "../../.yarn/berry/cache/lodash-npm-4.17.23-50bdb1c01a-10c0.zip/node_modules/lodash/",\
+      ["npm:4.18.1", {\
+        "packageLocation": "../../.yarn/berry/cache/lodash-npm-4.18.1-a64c3070ac-10c0.zip/node_modules/lodash/",\
         "packageDependencies": [\
-          ["lodash", "npm:4.17.23"]\
+          ["lodash", "npm:4.18.1"]\
         ],\
         "linkType": "HARD"\
       }]\
