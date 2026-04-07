@@ -35,8 +35,8 @@ describe("pipe type-level inference", () => {
 describe("pipe mismatch detection", () => {
   it("rejects incompatible adjacent transducers", () => {
     pipe(
-      map((n: number) => n.toString()),
       // @ts-expect-error string output does not match boolean input
+      map((n: number) => n.toString()),
       map((b: boolean) => (b ? 1 : 0)),
     );
   });
